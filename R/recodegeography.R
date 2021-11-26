@@ -30,7 +30,7 @@ RecodeGeography <- function(text,
         text <- as.character(text)
     if (is.numeric(text))
     {
-        if (!is.null(input.type) || input.type != "Postcode")
+        if (!is.null(input.type) && input.type != "Postcode")
             stop("The input data is numeric, but the ", sQuote("input.type"),
                  " parameter is ", dQuote(input.type), ". Only post codes can be",
                  " numeric.")

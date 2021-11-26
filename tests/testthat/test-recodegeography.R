@@ -10,3 +10,22 @@ test_that("Region detection works", {
     out <- RecodeGeography(text, output.type = "LGA")
 
 })
+
+test_that("Postcode to place conversion",
+{
+    text <- c(501, 1001)
+    out <- RecodeGeography(text, region = "USA", input.type = "Postcode",
+                           output.type = "State")
+    data(us.zip.codes, package = "flipGeoData")
+    zip <- us.zip.codes[["zip.code"]]
+    idx1 <- which(zip == text[1])[1]
+    idx2 <- which(zip == text[2])[1]
+    out.expect <- us.zip.codes[c(idx1, idx2), "state"]
+    expect_equal(out, out.expect)
+
+    text <- c("00501", "01001")
+    out <- RecodeGeography(text, region = "USA", input.type = "Postcode",
+                           output.type = "Place")
+    out.expect <- us.zip.codes[c(idx1, idx2), "place"]
+    expect_equal(out, out.expect)
+})

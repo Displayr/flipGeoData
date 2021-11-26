@@ -45,7 +45,6 @@ detectRegion <- function(text, input.type)
             {
                 if (input.type %in% available.types[[curr.region]])
                 {
-                    print()
                     matches <- findMatches(text.slice, curr.region, input.type)
                     if (any(!is.na(matches)))
                     {
@@ -99,6 +98,10 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
     }
 
     tbl <- dat[, input.type]
+    if (grepl("(zip|post)\\.code", input.type) &&
+        region %in% c("USA", "Australia", "New Zealand"))
+        text <- as.integer(text)
+
     found.idx <- match(text, tbl)
     if (FALSE && anyNA(found.idx) && max.dist > 0)
     {
@@ -112,7 +115,7 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
 convertTypeForRegionIfAvailable <- function(type, dat)
 {
     TYPES <- c("place|city|town",
-               "post.code|zip.code|postcode|postal.code",
+               "post\\.code|zip\\.code|postcode|postal\\.code",
                "state|province",
                "suburb|district|community",
                "LGA",

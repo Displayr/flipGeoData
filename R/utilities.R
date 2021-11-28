@@ -13,7 +13,7 @@ available.types = list(USA = c("place", "zip.code", "state", "county",
                        UK = c("place", "zip.code", "country", "county", "district",
                               "latitude", "longitude"),
                        Australia = c("place", "post.code", "state", "suburb",
-                                     "latitude", "longitude", "LGA", "region"),
+                                     "LGA", "region", "latitude", "longitude"),
                        `New Zealand` = c("place", "post.code", "region",
                                          "latitude", "longitude"))
 utils::globalVariables(c("data.list", "available.types"))
@@ -71,7 +71,7 @@ detectInputType <- function(text, region, min.matches = 1)
 {
     dat <- loadData(region)
     cols.to.check <- colnames(dat)
-    cols.to.check <- cols.to.check[!cols.to.check %in% c('latitude', 'longitude', "country.code")]
+    cols.to.check <- cols.to.check[!cols.to.check %in% c('latitude', 'longitude')]
     input.type <- NA
     for(col in cols.to.check)
     {
@@ -85,6 +85,26 @@ detectInputType <- function(text, region, min.matches = 1)
         }
     }
     return(input.type)
+}
+
+#' Guess an appropriate output type given a region
+#' and input.type
+#'
+#' Default to outputing places for postcode inputs and
+#' vice versa.
+#' @return string; output.type providing the column name
+#' of the data.frame specified by code{region} to return
+#' @noRd
+deduceOutputType <- function(input.type, region)
+{
+    candidates <- available.types[[region]]
+    if (input.type == "Place")
+        return(grep("^zip|^post", region, value = TRUE))
+    if (grepl("^zip|^post", input.type))
+        return("place")
+
+    if (input.type == "state" && region == "Europe")
+        return("country.code")
 }
 
 findMatches <- function(text, region, input.type, output.type, max.dist = 2,
@@ -119,7 +139,8 @@ convertTypeForRegionIfAvailable <- function(type, dat)
                "state|province",
                "suburb|district|community",
                "LGA",
-               "region")
+               "region",
+               "country.code")
     patt <- grep(type, TYPES, ignore.case = TRUE, value = TRUE)
     if (!length(patt))
     {

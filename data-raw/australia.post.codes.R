@@ -191,5 +191,5 @@ australia.post.codes[["region"]][missing.idx] <- NA
 act.idx <- australia.post.codes[["state"]] %in% "Australian Capital Territory"
 australia.post.codes[["region"]][act.idx] <- "Australian Capital Territory"
 australia.post.codes[["region"]] <- as.factor(australia.post.codes[["region"]])
-
+## australia.post.codes <- australia.post.codes[, c()]
 save(australia.post.codes, file = "data/australia.post.codes.rda", compress = TRUE)

@@ -26,4 +26,13 @@ us.zip.codes[["state"]] <- as.factor(us.zip.codes[["state"]])
 keep.cols <- c("place", "zip.code", "state", "county", "latitude", "longitude")
 us.zip.codes <- us.zip.codes[, keep.cols]
 
+## Add region info using sysdata from flipStandardCharts
+load(system.file("R", "sysdata.rda", package = "flipStandardCharts"))
+region <- as.character(us.regions[["Region"]])
+names(region) <- as.character(us.regions[["State"]])
+us.zip.codes$region <- dplyr::recode(us.zip.codes[["state"]], !!!region)
+
+us.zip.codes <- us.zip.codes[, c("place", "zip.code", "region", "state",
+                                 "county", "latitude", "longitude")]
+
 save(us.zip.codes, file = "data/us.zip.codes.rda", compress = TRUE)

@@ -5,7 +5,7 @@
 \alias{us.zip.codes}
 \title{Zip codes for the United States of America}
 \format{
-A data.frame with 40,970 rows and 6 columns.
+A data.frame with 40,970 rows and 7 columns.
 }
 \source{
 \url{https://download.geonames.org/export/zip/}
@@ -20,6 +20,7 @@ Zip codes, approximate latitude/longitude, state, and county for 40,970 places i
 \itemize{
 \item place - Character; place name
 \item zip.code - 3-5 digit integer zip code for \code{place}
+\item region - Factor with four levels; region of the U.S.: West, Midwest, South, or Northeast.
 \item state - Factor with 51 levels; state/1st order administrative subdivision in the U.S.
 \item county - Character; county or census area/2nd order administrative subdivision in the U.S.
 \item latitude - Numeric, approximate latitude for place

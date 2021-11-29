@@ -18,4 +18,17 @@ keep.cols <- c("place", "postal.code", "province", "latitude", "longitude")
 canada.postal.codes <- dat.full[, keep.cols]
 canada.postal.codes[["province"]] <- as.factor(canada.postal.codes[["province"]])
 
+qc.idx <- canada.postal.codes[["place"]] %in% "Quebec"
+canada.postal.codes[qc.idx, "place"] <- "Quebec City"
+
+regions <- c("Alberta" = "Prairies", "British Columbia" = "West",
+             "Manitoba" = "Prairies", "New Brunswick" = "Atlantic",
+             "Newfoundland and Labrador" = "Atlantic", "Northwest Territory" = "North",
+             "Nova Scotia" = "Atlantic", "Nunavut Territory" = "North",
+             "Ontario" = "Central", "Prince Edward Island" = "Atlantic",
+             "Quebec" = "Central", "Saskatchewan" = "Prairies", "Yukon" = "North")
+canada.postal.codes[["region"]] <- dplyr::recode(canada.postal.codes[["province"]],
+                                                 !!!regions)
+canada.postal.codes <- canada.postal.codes[, c("place", "postal.code", "region",
+                                               "province", "latitude", "longitude")]
 save(canada.postal.codes, file = "data/canada.postal.codes.rda", compress = TRUE)

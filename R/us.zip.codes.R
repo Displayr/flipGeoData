@@ -12,7 +12,7 @@
 #' \item longitude - Numeric, approximate longitude for place
 #' }
 #' @name us.zip.codes
-#' @format A data.frame with 40,970 rows and 6 columns.
+#' @format A data.frame with 40,970 rows and 7 columns.
 #' @usage data(us.zip.codes)
 #' @docType data
 #' @keywords datasets

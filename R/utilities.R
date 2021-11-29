@@ -4,9 +4,9 @@ data.list <- c(USA = "us.zip.codes",
                UK = "uk.post.codes",
                Australia = "australia.post.codes",
                `New Zealand` = "nz.post.codes")
-available.types = list(USA = c("place", "zip.code", "state", "county",
+available.types = list(USA = c("place", "zip.code", "region", "state", "county",
                                "latitude", "longitude"),
-                       Canada = c("place", "postal.code", "province",
+                       Canada = c("place", "postal.code", "region", "province",
                                   "latitude", "longitude"),
                        Europe = c("place", "zip.code", "state", "province",
                                   "community", "country.code", "latitude", "longitude"),
@@ -20,6 +20,7 @@ utils::globalVariables(c("data.list", "available.types"))
 
 
 #' Given a vector of text containing geographic
+#' @noRd
 detectRegion <- function(text, input.type)
 {
     n <- length(text)
@@ -98,15 +99,24 @@ detectInputType <- function(text, region, min.matches = 1)
 deduceOutputType <- function(input.type, region)
 {
     candidates <- available.types[[region]]
-    if (input.type == "Place")
-        return(grep("^zip|^post", region, value = TRUE))
+    if (input.type == "place")
+        return(grep("^zip|^post", candidates, value = TRUE))
     if (grepl("^zip|^post", input.type))
         return("place")
 
     if (input.type == "state" && region == "Europe")
         return("country.code")
+
+    ## columns of data frames are always arranged from
+    ## largest subregion type to smallest, so pick the previous
+    ## column from the input column position, to e.g. select
+    ## output state for county input.type
+    input.idx <- grep(input.type, candidates, fixed = TRUE)
+    return(candidates[input.idx-1])
 }
 
+#' @importFrom data.table chmatch
+#' @noRd
 findMatches <- function(text, region, input.type, output.type, max.dist = 2,
                         check.types = FALSE, ...)
 {
@@ -122,10 +132,11 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
         region %in% c("USA", "Australia", "New Zealand"))
         text <- as.integer(text)
 
-    found.idx <- match(text, tbl)
-    if (FALSE && anyNA(found.idx) && max.dist > 0)
+    found.idx <- chmatch(text, as.character(tbl))
+    if (anyNA(found.idx) && max.dist > 0)
     {
-##        same.first.char <- startsWith(tbl, substring())
+        na.idx <- which(is.na(found.idx))
+        found.idx[na.idx] <- findNearMatches(text[na.idx], tbl, max.dist, ...)
     }
     found <- rep(NA_character_, length(text))
     found <- dat[found.idx, output.type]
@@ -135,8 +146,9 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
 convertTypeForRegionIfAvailable <- function(type, dat)
 {
     TYPES <- c("place|city|town",
-               "post\\.code|zip\\.code|postcode|postal\\.code",
-               "state|province",
+               "post.code|zip.code|postcode|postal.code",
+               "state",
+               "province",
                "suburb|district|community",
                "LGA",
                "region",
@@ -162,8 +174,21 @@ convertTypeForRegionIfAvailable <- function(type, dat)
     return(col.name)
 }
 
+#' @importFrom utils adist
+#' @noRd
+findNearMatches <- function(txt, tbl, max.dist, ...)
+{
+    dists <- adist(txt, tbl, fixed = TRUE, ignore.case = TRUE,
+                   useBytes = TRUE)
+    out <- apply(dists, 1, which.min)
+    matched <- dists[cbind(seq_along(out), out)] <= max.dist
+    out[!matched] <- NA
+    return(out)
+}
+
 #' If a region is not specified, package data is checked in
 #' the order USA, Canada, Europe, UK, Australia
+#' @noRd
 orderPossibleRegionsByRServer <- function()
 {
     possible.regions  <- data.list

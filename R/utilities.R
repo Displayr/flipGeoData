@@ -145,6 +145,7 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
 
 convertTypeForRegionIfAvailable <- function(type, dat)
 {
+    type <- make.names(tolower(type))
     TYPES <- c("place|city|town",
                "post.code|zip.code|postcode|postal.code",
                "state",
@@ -206,6 +207,7 @@ orderPossibleRegionsByRServer <- function()
 }
 
 #' Used by Create New Variables - Recode Geography QScript
+#' @noRd
 detemineGUIcontrolInput <- function(text)
 {
     region <- detectRegion(text, NULL)

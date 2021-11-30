@@ -23,7 +23,7 @@ RecodeGeography <- function(text,
                            input.type = NULL,
                            output.type = NULL,
                            check.synonyms = FALSE,
-                           max.levenstein.dist,
+                           max.levenshtein.dist = 0,
                            ...)
 {
     if (is.factor(text))
@@ -52,7 +52,7 @@ RecodeGeography <- function(text,
     input.type <- convertTypeForRegionIfAvailable(input.type, dat)
     output.type <- convertTypeForRegionIfAvailable(output.type, dat)
 
-    found <- findMatches(text, region, input.type, output.type, max.levenstein.dist,
+    found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
                        check.types = FALSE, ...)
     if (FALSE && check.synonyms && anyNA(found.idx))
     {
@@ -62,7 +62,7 @@ RecodeGeography <- function(text,
     if (FALSE && anyNA(found.idx))
     {
         findMatchesInNeighbouringRegion(text, region, input.type,
-                                        output.type, max.levenstein.dist, ...)
+                                        output.type, max.levenshtein.dist, ...)
     }
 
     return(found)

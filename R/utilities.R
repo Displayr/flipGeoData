@@ -14,7 +14,7 @@ available.types = list(USA = c("place", "zip.code", "region", "state", "county",
                               "latitude", "longitude"),
                        Australia = c("place", "post.code", "state", "suburb",
                                      "LGA", "region", "latitude", "longitude"),
-                       `New Zealand` = c("place", "post.code", "region",
+                       `New Zealand` = c("place", "post.code", "region", "lga",
                                          "latitude", "longitude"))
 utils::globalVariables(c("data.list", "available.types"))
 

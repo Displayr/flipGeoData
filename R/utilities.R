@@ -150,6 +150,7 @@ convertTypeForRegionIfAvailable <- function(type, dat)
                "post.code|zip.code|postcode|postal.code",
                "state",
                "province",
+               "county",
                "suburb|district|community",
                "LGA",
                "region",

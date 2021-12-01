@@ -53,13 +53,16 @@ euro.codes <- vapply(euro.countries, function(cname)
 euro.codes["Vatican City"] <- "VC"
 euro.codes["Czech Republic"] <- "CZ"
 
+country.names <- names(alpha2.code)
+country.names <- sub(" [(][A-z .-]*[)]$", "", country.names)
+country.names[country.names %in% "Viet Nam"] <- "Vietnam"
 
 country.codes <- data.frame(country.name = names(alpha2.code),
                     country.code = unname(alpha2.code),
                     in.europe = alpha2.code %in% euro.codes)
 
 available.post.codes <- c("US", "CA", "AU", "NZ",
-                          unique(euro.post.codes[["country.code"]]))
+                          levels(euro.post.codes[["country.code"]]))
 available.synonyms <- unique(synonyms[["country.code"]])
 country.codes[["post.codes.available"]] <- country.codes[["country.code"]] %in% available.post.codes
 country.codes[["synonyms.available"]] <- country.codes[["country.code"]] %in% available.synonyms

@@ -176,16 +176,12 @@ convertTypeForRegionIfAvailable <- function(type, dat)
     return(col.name)
 }
 
-#' @importFrom utils adist
+#' @importFrom stringdist amatch
 #' @noRd
 findNearMatches <- function(txt, tbl, max.dist, ...)
 {
-    dists <- adist(txt, tbl, fixed = TRUE, ignore.case = TRUE,
-                   useBytes = TRUE)
-    out <- apply(dists, 1, which.min)
-    matched <- dists[cbind(seq_along(out), out)] <= max.dist
-    out[!matched] <- NA
-    return(out)
+    return(amatch(txt, tbl, matchNA = FALSE, maxDist = max.dist,
+                  method = "osa", ...))
 }
 
 #' If a region is not specified, package data is checked in

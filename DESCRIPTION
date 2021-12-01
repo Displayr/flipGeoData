@@ -5,7 +5,8 @@ Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Contains postal codes, approximate latitude and longitude, state, and district information for cities and towns in Canada, the United States, Australia, New Zealand, the United Kingdom, and most European countries.
 Depends: R (>= 3.5.0)
-Imports: data.table
+Imports: data.table,
+    stringdist
 Suggests: flipStandardCharts,
     dplyr,
     FNN

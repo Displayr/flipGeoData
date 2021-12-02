@@ -18,9 +18,8 @@ names(alpha2.code) <- country.names
 
 loadPkgData <- function(fname)
 {
-    ##    data.file <- system.file("data", "euro.post.codes.rdata",
-    ##                             package = "flipGeoData")
-    data.file <- file.path("../data/", fname)
+    data.file <- system.file("data", "euro.post.codes.rdata",
+                             package = "flipGeoData")
     if (!file.exists(data.file))
     {
         file.loc <- paste0("data-raw/", sub("[.][A-z]*$", ".R", fname))
@@ -28,8 +27,8 @@ loadPkgData <- function(fname)
              " to create this data set.")
 
     }
-    load(data.file, .GlobalEnv)
-    return(invisible())
+    load(data.file)
+    return(invisble())
 }
 
 loadPkgData("euro.post.codes.rda")
@@ -68,6 +67,5 @@ available.synonyms <- unique(synonyms[["country.code"]])
 country.codes[["post.codes.available"]] <- country.codes[["country.code"]] %in% available.post.codes
 country.codes[["synonyms.available"]] <- country.codes[["country.code"]] %in% available.synonyms
 
-tdir <- tempdir()
-save(country.codes, file = file.path(tdir, "country.codes.rda"))
+save(country.codes, file = "data/country.codes.rda")
 

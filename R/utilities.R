@@ -130,14 +130,19 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
     tbl <- dat[, input.type]
     if (grepl("(zip|post)\\.code", input.type) &&
         region %in% c("USA", "Australia", "New Zealand"))
-        text <- as.integer(text)
-
-    found.idx <- chmatch(text, as.character(tbl))
-    if (anyNA(found.idx) && max.dist > 0)
     {
-        na.idx <- which(is.na(found.idx))
-        found.idx[na.idx] <- findNearMatches(text[na.idx], tbl, max.dist, ...)
+        text <- as.integer(text)
+        found.idx <- text %in% tbl
+    }else
+    {
+        found.idx <- chmatch(text, as.character(tbl))
+        if (anyNA(found.idx) && max.dist > 0)
+        {
+            na.idx <- which(is.na(found.idx))
+            found.idx[na.idx] <- findNearMatches(text[na.idx], tbl, max.dist, ...)
+        }
     }
+
     found <- rep(NA_character_, length(text))
     found <- dat[found.idx, output.type]
     return(found)

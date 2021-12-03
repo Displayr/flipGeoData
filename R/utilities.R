@@ -264,7 +264,7 @@ regionToCountryCode <- function(region)
 {
     if (region == "Europe")
     {
-        data(country.codes, package = "flipGeoData")
+        data(country.codes, package = "flipGeoData", envir = environment())
         idx <- country.codes[["in.europe"]] & country.codes[["post.codes.available"]]
         return(country.codes[idx, "country.code"])
     }else

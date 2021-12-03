@@ -3,3 +3,4 @@
 export(RecodeGeography)
 importFrom(data.table,chmatch)
 importFrom(stringdist,amatch)
+importFrom(utils,data)

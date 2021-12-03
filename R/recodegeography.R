@@ -71,6 +71,8 @@ RecodeGeography <- function(text,
     return(found)
 }
 
+#' @importFrom utils data
+#' @noRd
 loadData <- function(region)
 {
     env <- environment()

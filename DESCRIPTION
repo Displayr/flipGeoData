@@ -7,10 +7,10 @@ Description: Contains postal codes, approximate latitude and longitude, state, a
 Depends: R (>= 3.5.0)
 Imports: data.table,
     stringdist
-Suggests: flipStandardCharts,
-    dplyr,
+Suggests: dplyr,
     FNN
 License: GPL-3
+LazyData: TRUE
 URL: https://github.com/Displayr/flipGeoData
 Encoding: UTF-8
 RoxygenNote: 7.1.2

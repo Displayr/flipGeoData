@@ -153,7 +153,7 @@ lga.vec <- character(length(post.codes))
 for (i in unique.post.codes) {
     lga.vec[post.codes %in% i] <- pc.lgas[as.character(i)]
 }
-australia.post.codes[["LGA"]] <- lga.vec
+australia.post.codes[["lga"]] <- lga.vec
 
 
 ## (very) roughly, which places have been missclassified?

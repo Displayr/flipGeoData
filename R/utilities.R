@@ -13,7 +13,7 @@ available.types = list(USA = c("place", "zip.code", "region", "state", "county",
                        UK = c("place", "zip.code", "country", "county", "district",
                               "latitude", "longitude"),
                        Australia = c("place", "post.code", "state", "suburb",
-                                     "LGA", "region", "latitude", "longitude"),
+                                     "lga", "region", "latitude", "longitude"),
                        `New Zealand` = c("place", "post.code", "region", "lga",
                                          "latitude", "longitude"))
 utils::globalVariables(c("data.list", "available.types"))

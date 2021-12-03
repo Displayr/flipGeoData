@@ -58,3 +58,27 @@ test_that("Approx. matching with levenshtein dist.",
     expect.out[4] <- us.zip.codes[idx[4], "zip.code"]
     expect_equal(out, expect.out)
 })
+
+## test_that("Recode geography finds state synonyms",
+## {
+##     txt <- c("MB", NA, "Alberta", "Newfoundland", "Québec")
+##     expected.out <- rep(NA_character_, length(txt))
+##     expected.out[3] <- "Prairies"
+##     out <- RecodeGeography(txt, region = "Canada", input.type = "province",
+##                            check.synonyms = FALSE)
+##     expect_equal(as.character(out), expected.out)
+##     expected.out <- c("Prairies", NA, "Prairies", "Atlantic", "Central")
+##     out <- RecodeGeography(txt, region = "Canada", input.type = "province",
+##                            check.synonyms = TRUE)
+##     expect_equal(as.character(out), expected.out)
+
+##     txt <- c("Nevada", "Nev.", "NV")
+##     txt[2:3] <- flipGeoData:::findSynonymsFromList(txt[2:3], "USA")
+##     expect_equal(txt, rep("Nevada", length(txt)))
+
+##     txt <- c("Borough of Wolverhampton", "Leicester City", "Wakefield")
+##     expected.out <- c("Wolverhampton")
+##     out <- RecodeGeography(txt, region = "UK", input.type = "county",
+##                            output.type = "district",
+##                            check.synonyms = TRUE)
+## })

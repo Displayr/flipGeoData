@@ -54,15 +54,18 @@ RecodeGeography <- function(text,
 
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
                        check.types = FALSE, ...)
-    if (FALSE && check.synonyms && anyNA(found.idx))
+    if (check.synonyms && anyNA(found))
     {
         na.idx <- which(is.na(found))
-
+        mapped.synonyms <- findSynonyms(text[na.idx], region, input.type)
+        found.syn <- findMatches(mapped.synonyms, region, input.type, output.type,
+                                 max.dist = 0)
+        found[na.idx] <- found.syn
     }
-    if (FALSE && anyNA(found.idx))
+    if (FALSE && anyNA(found))
     {
-        findMatchesInNeighbouringRegion(text, region, input.type,
-                                        output.type, max.levenshtein.dist, ...)
+        ## findMatchesInNeighbouringRegion(text, region, input.type,
+        ##                                 output.type, max.levenshtein.dist, ...)
     }
 
     return(found)

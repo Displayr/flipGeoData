@@ -217,3 +217,63 @@ detemineGUIcontrolInput <- function(text)
     output.type <- deduceOutputType(input.type, region)
     return(c(region, input.type, output.type))
 }
+
+findSynonyms <- function(text, region, type)
+{
+    mapped.synonyms <- rep(NA_character_, length(text))
+    if (stateSynonymsRequested(region, type))
+        mapped.synonyms <- findAdmin1Synonyms(text, region)
+    else if (region == "Europe" && type %in% c("place", "province", "community"))
+        mapped.synonyms <- findSynonymsInTable(text)
+    return(mapped.synonyms)
+}
+
+admin1SynonymsRequested <- function(region, type)
+{
+    out <- FALSE
+    if (type == "state" || (region == "UK" && type == "county") ||
+        (region == "New Zealand" && type == "region") ||
+        (region == "Canada" && type == "province"))
+        out <- TRUE
+    return(out)
+}
+
+findRegionSynonyms <- function(text, region)
+{
+    ccodes <- regionToCountryCode(region)
+    data(admin1.synonyms, package = "flipGeoData")
+    idx <- admin1.synonyms[["country.code"]] %in% ccodes
+    admin1 <- admin1.synonyms[idx, ]
+    patts <- paste(admin1[, c("name", "name_en", "woe_name",
+                              "name_alt")], sep = "|")
+    found.synonyms <- vapply(patts, function(patt) grep(patt, text, useBytes = TRUE)[1L],
+                             1L, USE.NAMES = FALSE)
+
+
+    state.synonyms <- admin1.name.map[[region]]
+    synonyms.flat <- unlist(state.synonyms)
+    main.names <- sub("[0-9]+$", "", names(synonyms.flat))
+    found <- vapply(text, function(patt) grep(patt, synonyms.flat, fixed = TRUE)[1L],
+                    0L, USE.NAMES = FALSE)
+    if (all(is.na(found)))
+        return(found)
+    return(main.names[found])
+}
+
+regionToCountryCode <- function(region)
+{
+    if (region == "Europe")
+    {
+        data(country.codes, package = "flipGeoData")
+        idx <- country.codes[["in.europe"]] & country.codes[["post.codes.available"]]
+        return(country.codes[idx, "country.code"])
+    }else
+    {
+        return(switch(region,
+                      USA = "US",
+                      Canada = "CA",
+                      Australia = "",
+                      UK = "GB",
+                      "New Zealand" = "NZ"))
+    }
+}

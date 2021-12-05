@@ -55,9 +55,16 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
     
+      - name: Show os and R version
+        if: always()
+        run: |
+          echo "{{runner.os}}"
+          echo "{{matrix.config.r}}"
+        shell: bash
+    
       - name: Send success JSON data to Slack workflow
         id: slack
-        if: success() && ${{matrix.config.os}} == 'ubuntu-latest' && ${{matrix.config.r}} == 'release'
+        if: success()
         uses: slackapi/slack-github-action@v1.16.0
         with:
           payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow [#${{github.job}}](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}) has **succeeded**.\"},\"accessory\":{\"type\": \"image\", \"image_url\": \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{github.sha}} in ${{github.repository}} by ${{github.actor}}.\"}}]}"
@@ -67,7 +74,7 @@ jobs:
 
       - name: Send failure JSON data to Slack workflow
         id: slackfail
-        if: failure() && ${{matrix.config.os}} == 'ubuntu-latest'
+        if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
           payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow [#${{github.job}}](${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}) has **failed**.\"},\"accessory\":{\"type\": \"image\", \"image_url\": \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{github.sha}} in ${{github.repository}} by ${{github.actor}}.\"}}]}"

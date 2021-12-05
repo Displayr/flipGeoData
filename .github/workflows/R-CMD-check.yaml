@@ -66,7 +66,7 @@ jobs:
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
 
       - name: Send failure JSON data to Slack workflow
-        id: slack
+        id: slackfail
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:

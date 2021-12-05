@@ -59,7 +59,7 @@ jobs:
         id: slack
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow has **succeeded**.\"},\"accessory\":{\"type\": \"image\", \"image_url\": \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"}]}"/
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow has **succeeded**.\"},\"accessory\":{\"type\": \"image\", \"image_url\": \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

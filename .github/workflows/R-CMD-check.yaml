@@ -63,9 +63,9 @@ jobs:
     with:
       if: success()
         payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow [#\" + ${{GITHUB_ACTION}} +\"](\" + ${{GITHUB_ACTION_URL}} + \") has **succeeded**.\\"},
-      \"accessory\":{\"type\": \"image\", \"image_url\": \" + \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit \" + ${{github.sha}} + \" in \" + ${{github.repository}} + \" by \" + ${{github.actor}} + \".\"]}"
+      \"accessory\":{\"type\": \"image\", \"image_url\": \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit \" + ${{github.sha}} + \" in \" + ${{github.repository}} + \" by \" + ${{github.actor}} + \".\"]}"
     if: failure() 
-        payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow [#\" + ${{GITHUB_ACTION}} +\"](\" + ${{GITHUB_ACTION_URL}} + \") has **failed**.\"},\"accessory\":{\"type\": \"image\", \"image_url\": \" + \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit \" + ${{github.sha}} + \" in \" + ${{github.repository}} + \" by \" + ${{github.actor}} + \".\"]}"
+        payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow [#\" + ${{GITHUB_ACTION}} +\"](\" + ${{GITHUB_ACTION_URL}} + \") has **failed**.\"},\"accessory\":{\"type\": \"image\", \"image_url\": \"https://avatars.githubusercontent.com/u/13129122?s=200&v=4\",\"alt_text\": \"GitHub Actions avatar\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit \" + ${{github.sha}} + \" in \" + ${{github.repository}} + \" by \" + ${{github.actor}} + \".\"]}"
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
       SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

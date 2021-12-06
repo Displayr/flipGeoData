@@ -65,7 +65,6 @@ jobs:
 
       - name: Send success JSON data to Slack workflow
         id: slack
-        needs: shortsha
         if: success()
         uses: slackapi/slack-github-action@v1.16.0
         with:
@@ -77,7 +76,6 @@ jobs:
 
       - name: Send failure JSON data to Slack workflow
         id: slackfail
-        needs: shortsha
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:

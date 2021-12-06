@@ -58,8 +58,8 @@ jobs:
       - name: Create short sha
         if: always()
         run: |
-	  echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-	  echo ${{matrix.config.os}} == 'ubuntu-latest"
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo ${{matrix.config.os}} == 'ubuntu-latest"
           echo ${{matrix.config.r}} == 'release'
 
       - name: Send success JSON data to Slack workflow
@@ -72,7 +72,7 @@ jobs:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
         shell: bash
-	
+
       - name: Send failure JSON data to Slack workflow
         id: slackfail
         if: failure() && ${{runner.os}} == 'ubuntu-latest" && ${{matrix.config.r}} == 'release'
@@ -82,5 +82,4 @@ jobs:
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-	shell: bash  
-    
+        shell: bash  

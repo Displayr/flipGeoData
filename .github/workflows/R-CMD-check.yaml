@@ -123,7 +123,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "${{fromJSON(env.JSON_PAYLOAD)}}"
+          payload: "${{env.JSON_PAYLOAD}}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

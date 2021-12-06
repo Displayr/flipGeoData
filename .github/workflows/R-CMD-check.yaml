@@ -60,60 +60,13 @@ jobs:
         run: |
           echo "${{runner.os}}"
           echo "${{matrix.config.r}}"
-          JSON_PAYLOAD=$(cat << EOF
-          {\"blocks\":[
-          {
-              \"type\": \"section\",
-              \"text\": {
-                  \"type\": \"mrkdwn\",
-                  \"text\": \"Workflow ${{github.job}} in ${{github.repository}} has *failed*.\"
-              },
-              \"accessory\": {
-                  \"type\": \"button\",
-                  \"text\": {
-                      \"type\": \"plain_text\",
-                      \"text\": \"Job ${{github.job_id}}\",
-                      \"emoji\": true
-                  },
-                  \"value\": \"click_me_123\",
-                  \"url\": \"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",
-                  \"action_id\": \"button-action\"
-              }
-          },
-          {
-              \"type\": \"divider\"
-          },
-          {
-              \"type\": \"section\",
-              \"text\": {
-                  \"type\": \"mrkdwn\",
-                  \"text\": \"Commit ${{github.sha}} by ${{github.actor}}.\"
-              },
-              \"accessory\": {
-                  \"type\": \"button\",
-                  \"text\": {
-                      \"type\": \"plain_text\",
-                      \"text\": \"View commit\",
-                      \"emoji\": true
-                  },
-                  \"value\": \"click_me_123\",
-                  \"url\": \"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",
-                  \"action_id\": \"button-action\"
-              }
-          }
-          EOF
-          )
-          echo "JSON_PAYLOAD<<EOF" >> $GITHUB_ENV
-          echo "$JSON_PAYLOAD" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
-        shell: bash
-    
+
       - name: Send success JSON data to Slack workflow
         id: slack
         if: success()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "${{env.JSON_PAYLOAD}}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *passed*.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{github.sha}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Viewcommit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -123,7 +76,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "${{env.JSON_PAYLOAD}}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *failed*.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{github.sha}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Viewcommit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

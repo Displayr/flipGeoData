@@ -55,18 +55,16 @@ jobs:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
     
-      - name: Create JSON payload
+      - name: Create short sha
         if: always()
-        run: |
-          echo "${{runner.os}}"
-          echo "${{matrix.config.r}}"
+        run: echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
 
       - name: Send success JSON data to Slack workflow
         id: slack
-        if: success()
+        if: success() && "${{runner.os}}" == "Linux" && "${{matrix.config.r}}" == "release"
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *passed*.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{github.sha}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Viewcommit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *passed* on ${{runner.os}} with R-${{matrix.config.r}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{ steps.vars.outputs.sha_short }} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Viewcommit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
@@ -76,7 +74,7 @@ jobs:
         if: failure()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *failed*.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{github.sha}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Viewcommit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *failed* on ${{runner.os}} with R-${{matrix.config.r}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{steps.vars.outputs.sha_short}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Viewcommit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

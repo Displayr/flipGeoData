@@ -11,7 +11,8 @@ name: R-CMD-check
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-
+    outputs:
+      short_sha: ${{ steps.set-matrix.outputs.short_sha }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
@@ -58,8 +59,6 @@ jobs:
       - name: Create short sha
         id: shortsha
         if: always()
-        outputs:
-          short_sha: ${{ steps.set-matrix.outputs.short_sha }}
         run: |
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           echo ${{matrix.config.os == 'ubuntu-latest'}}

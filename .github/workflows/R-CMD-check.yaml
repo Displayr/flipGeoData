@@ -103,14 +103,6 @@ jobs:
           echo "::set-output name=status_wrel::$(<pass_status_Windows_rrelease/Windows_rrelease.txt)"
           echo "::set-output name=status_udev::$(<pass_status_Linux_rdevel/Linux_rdevel.txt)"
 
-      - name: Show the values of the outputs
-        run: |
-          # using the syntax steps.<step_id>.outputs.<output_name> to access the output parameters
-          echo "status_urel = ${{ steps.set_outputs.outputs.status_urel }}"
-          echo "status_udev = ${{ steps.set_outputs.outputs.status_udev }}"
-          echo "status_wrel = ${{ steps.set_outputs.outputs.status_wrel }}"
-          echo "short_sha = ${{ steps.set_short_sha.outputs.sha }}"
-
       - name: Send success JSON data to Slack workflow
         id: slack
         if: always()

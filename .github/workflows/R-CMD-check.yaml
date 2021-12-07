@@ -71,12 +71,12 @@ jobs:
     needs: [ubuntu-latest (release), windows-latest (release), ubuntu-latest (devel)]
     if: always()
     steps:
-      name: Create short commit sha
-      id: set_short_sha
-      if: always()
-      run: |
-        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-        echo ${{matrix.config.os == 'ubuntu-latest'}}
+      - name: Create short commit sha
+        id: set_short_sha
+        if: always()
+        run: |
+          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+          echo ${{matrix.config.os == 'ubuntu-latest'}}
 
       - name: Download artifact pass_status_ubuntu-latest_rrelease
         uses: actions/download-artifact@v1

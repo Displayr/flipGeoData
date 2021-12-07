@@ -72,8 +72,8 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
+      - uses: actions/checkout@v2
       - name: Create short commit sha
-        uses: actions/checkout@v2
         id: set_short_sha
         if: always()
         run: |

@@ -24,7 +24,7 @@ utils::globalVariables(c("data.list", "available.types"))
 detectRegion <- function(text, input.type)
 {
     n <- length(text)
-    min.matches <- min(n, 2)
+    min.matches <- min(n, 5)
     batch.size <- min(n, 50)
     possible.regions <- orderPossibleRegionsByRServer()
     region <- NULL
@@ -56,7 +56,7 @@ detectRegion <- function(text, input.type)
             }
         }
         max.idx <- idx[length(idx)]
-        min.matches <- 1  ## reduce tolerance if no matches on first pass
+        min.matches <- min(n, 2)  ## reduce tolerance if no matches on first pass
         idx <- (max.idx + 1):min(max.idx+batch.size, n)
     }
     if (is.null(region))

@@ -67,7 +67,8 @@ RecodeGeography <- function(text,
         ## findMatchesInNeighbouringRegion(text, region, input.type,
         ##                                 output.type, max.levenshtein.dist, ...)
     }
-
+    if (is.factor(found))  # R variables in Displayr get converted from factors to integer
+        found <- as.character(found)
     return(found)
 }
 

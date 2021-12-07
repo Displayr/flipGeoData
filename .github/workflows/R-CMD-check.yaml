@@ -11,8 +11,6 @@ name: R-CMD-check
 jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
-    outputs:
-      short_sha: ${{ steps.set-matrix.outputs.short_sha }}
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
@@ -55,32 +53,68 @@ jobs:
         with:
           name: ${{ runner.os }}-r${{ matrix.config.r }}-results
           path: check
-    
-      - name: Create short sha
-        id: shortsha
+
+      - name: Create file with job status
         if: always()
         run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo ${{matrix.config.os == 'ubuntu-latest'}}
+          touch ${{ runner.os }}_r${{ matrix.config.r }}.txt
+          echo ${{ job.status }} > ${{ runner.os }}_r${{ matrix.config.r }}.txt
+
+      - name: Upload status file as an artifact
+        if: always()
+        uses: actions/upload-artifact@v1
+        with:
+          name: pass_status_${{ runner.os }}_r${{ matrix.config.r }}
+          path: ${{ runner.os }}_r${{ matrix.config.r }}.txt
+
+  Create Slack notification:
+    needs: [ubuntu-latest (release), windows-latest (release), ubuntu-latest (devel)]
+    if: always()
+    steps:
+      name: Create short commit sha
+      id: set_short_sha
+      if: always()
+      run: |
+        echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
+        echo ${{matrix.config.os == 'ubuntu-latest'}}
+
+      - name: Download artifact pass_status_ubuntu-latest_rrelease
+        uses: actions/download-artifact@v1
+        with:
+          name: pass_status_ubuntu-latest_rrelease
+
+      - name: Download artifact pass_status_ubuntu-latest_rdevel
+        uses: actions/download-artifact@v1
+        with:
+          name: pass_status_ubuntu-latest_rdevel
+
+      - name: Download artifact pass_status_windows-latest_rrelease
+        uses: actions/download-artifact@v1
+        with:
+          name: pass_status_windows-latest_rrelease
+
+      - name: Set the statuses of each build as output parameters
+        id: set_outputs
+        run: |
+          echo "::set-output name=status_urel::$(<pass_status_ubuntu-latest_rrelease/ubuntu-latest_rrelease.txt)"
+          echo "::set-output name=status_wrel::$(<pass_status_windows-latest_rrelease/windows-latest_rrelease.txt)"
+          echo "::set-output name=status_udev::$(<pass_status_ubuntu-latest_rdevel/ubuntu-latest_rdevel.txt)"
+
+      - name: Show the values of the outputs
+        run: |
+          # using the syntax steps.<step_id>.outputs.<output_name> to access the output parameters
+          echo "status_urel = ${{ steps.set_outputs.outputs.status_urel }}"
+          echo "status_udev = ${{ steps.set_outputs.outputs.status_udev }}"
+          echo "status_wrel = ${{ steps.set_outputs.outputs.status_wrel }}"
+          echo "short_sha = ${{ steps.set_short_sha.outputs.short_sha }}"
 
       - name: Send success JSON data to Slack workflow
         id: slack
-        if: success()
+        if: always()
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel: '#github-notifications'
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *passed* on ${{matrix.config.os}} with R-${{matrix.config.r}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{ needs.shortsha.outputs.sha_short }} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
-        env:
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
-
-      - name: Send failure JSON data to Slack workflow
-        id: slackfail
-        if: failure()
-        uses: slackapi/slack-github-action@v1.16.0
-        with:
-          channel: '#github-notifications'
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} in ${{github.repository}} has *failed* on ${{matrix.config.os}} with R-${{matrix.config.r}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Commit ${{needs.shortsha.outputs.sha_short}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.job}} for commit ${{ steps.set_short_sha.outputs.short_sha }} in ${{github.repository}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Ubuntu-latest (R-release): *${{ steps.set_outputs.outputs.status_urel }}*, Ubuntu-latest (R-devel): *${{ steps.set_outputs.outputs.status_udev }}*, Windows (R-release): *${{ steps.set_outputs.outputs.status_wrel }}*\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

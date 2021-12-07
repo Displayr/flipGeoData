@@ -69,6 +69,7 @@ jobs:
 
   Create Slack notification:
     needs: [ubuntu-latest (release), windows-latest (release), ubuntu-latest (devel)]
+    runs-on: ubuntu-latest
     if: always()
     steps:
       - name: Create short commit sha

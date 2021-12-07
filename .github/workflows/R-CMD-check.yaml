@@ -73,6 +73,7 @@ jobs:
     if: always()
     steps:
       - name: Create short commit sha
+        uses: actions/checkout@v2
         id: set_short_sha
         if: always()
         run: |

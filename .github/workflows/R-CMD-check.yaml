@@ -74,11 +74,10 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Create short commit sha
+        uses: benjlevesque/short-sha@v1.2
         id: set_short_sha
-        if: always()
-        run: |
-          echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
-          echo ${{matrix.config.os == 'ubuntu-latest'}}
+        with:
+          length: 7
 
       - name: Download artifact pass_status_Linux_rrelease
         uses: actions/download-artifact@v1
@@ -108,7 +107,7 @@ jobs:
           echo "status_urel = ${{ steps.set_outputs.outputs.status_urel }}"
           echo "status_udev = ${{ steps.set_outputs.outputs.status_udev }}"
           echo "status_wrel = ${{ steps.set_outputs.outputs.status_wrel }}"
-          echo "short_sha = ${{ steps.set_short_sha.outputs.short_sha }}"
+          echo "short_sha = ${{ steps.set_short_sha.outputs.sha }}"
 
       - name: Send success JSON data to Slack workflow
         id: slack
@@ -116,7 +115,7 @@ jobs:
         uses: slackapi/slack-github-action@v1.16.0
         with:
           channel: '#github-notifications'
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.workflow}} for commit ${{ steps.set_short_sha.outputs.short_sha }} in ${{github.repository}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Ubuntu-latest (R-release): *${{ steps.set_outputs.outputs.status_urel }}*, Ubuntu-latest (R-devel): *${{ steps.set_outputs.outputs.status_udev }}*, Windows (R-release): *${{ steps.set_outputs.outputs.status_wrel }}*\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.workflow}} for commit ${{ steps.set_short_sha.outputs.sha }} in ${{github.repository}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"Run #${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\"}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Ubuntu-latest (R-release): *${{ steps.set_outputs.outputs.status_urel }}*, Ubuntu-latest (R-devel): *${{ steps.set_outputs.outputs.status_udev }}*, Windows (R-release): *${{ steps.set_outputs.outputs.status_wrel }}*\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\"}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

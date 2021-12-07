@@ -80,27 +80,27 @@ jobs:
           echo "::set-output name=sha_short::$(git rev-parse --short HEAD)"
           echo ${{matrix.config.os == 'ubuntu-latest'}}
 
-      - name: Download artifact pass_status_ubuntu-latest_rrelease
+      - name: Download artifact pass_status_Linux_rrelease
         uses: actions/download-artifact@v1
         with:
-          name: pass_status_ubuntu-latest_rrelease
+          name: pass_status_Linux_rrelease
 
-      - name: Download artifact pass_status_ubuntu-latest_rdevel
+      - name: Download artifact pass_status_Linux_rdevel
         uses: actions/download-artifact@v1
         with:
-          name: pass_status_ubuntu-latest_rdevel
+          name: pass_status_Linux_rdevel
 
-      - name: Download artifact pass_status_windows-latest_rrelease
+      - name: Download artifact pass_status_Windows_rrelease
         uses: actions/download-artifact@v1
         with:
-          name: pass_status_windows-latest_rrelease
+          name: pass_status_Windows_rrelease
 
       - name: Set the statuses of each build as output parameters
         id: set_outputs
         run: |
-          echo "::set-output name=status_urel::$(<pass_status_ubuntu-latest_rrelease/ubuntu-latest_rrelease.txt)"
-          echo "::set-output name=status_wrel::$(<pass_status_windows-latest_rrelease/windows-latest_rrelease.txt)"
-          echo "::set-output name=status_udev::$(<pass_status_ubuntu-latest_rdevel/ubuntu-latest_rdevel.txt)"
+          echo "::set-output name=status_urel::$(<pass_status_Linux_rrelease/ubuntu-latest_rrelease.txt)"
+          echo "::set-output name=status_wrel::$(<pass_status_Windows_rrelease/windows-latest_rrelease.txt)"
+          echo "::set-output name=status_udev::$(<pass_status_Linux_rdevel/ubuntu-latest_rdevel.txt)"
 
       - name: Show the values of the outputs
         run: |

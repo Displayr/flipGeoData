@@ -3,7 +3,7 @@
 \docType{data}
 \name{euro.post.codes}
 \alias{euro.post.codes}
-\title{Post codes for regions of Europe.}
+\title{Postcodes for regions of Europe.}
 \format{
 A data.frame with 719,147 rows and 8 columns.
 }
@@ -14,19 +14,18 @@ A data.frame with 719,147 rows and 8 columns.
 data(euro.post.codes)
 }
 \description{
-Post codes, approximate latitude/longitude, and state/province info for cities and towns in 42 European countries.
+Postcodes, approximate latitude/longitude, and state/province info for cities and towns in 42 European countries.
 }
 \details{
 \itemize{
 \item place - character string place name
-\item zip.code - character zip code for place
+\item post.code - character postcode for place
 \item state - Character; state/1st order administrative subdivision
 \item province - Character; province/2nd order administrative subdivision
-\item state - Character; community/3rd order administrative subdivision
+\item community - Character; community/3rd order administrative subdivision
 \item country.code - Factor with 42 levels; two-character country code for the country in ISO-3166 format.
 \item latitude - Numeric, approximate latitude for region/place
 \item longitude - Numeric, approximate longitude for region/place
-\item time.zone - Factor with 84 levels containing the time zone for the region/place.
 }
 }
 \keyword{datasets}

@@ -14,7 +14,7 @@ dat.full <- read.delim(file.path(dirname(fname), "allCountries.txt"),
                        encoding = "UTF-8", header = FALSE)
 
 ## See https://download.geonames.org/export/zip/
-colnames(dat.full) <- c("country.code", "zip.code", "place", "state", "state.code",
+colnames(dat.full) <- c("country.code", "post.code", "place", "state", "state.code",
 "province", "province.code", "community", "community.code", "latitude", "longitude", "lat.long.acc")
 
 
@@ -28,7 +28,7 @@ keep.codes <- c("AL", "AD", "AM", "AT", "AZ", "BY", "BE", "BA", "BG",
 euro.post.codes <- dat.full[dat.full[["country.code"]] %in% keep.codes, ]
 euro.post.codes[["country.code"]] <- as.factor(euro.post.codes[["country.code"]])
 
-keep.cols <- c("place", "zip.code", "state", "province", "community",
+keep.cols <- c("place", "post.code", "state", "province", "community",
                "country.code", "latitude", "longitude")
 euro.post.codes <- euro.post.codes[, keep.cols]
 

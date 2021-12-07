@@ -208,7 +208,7 @@ orderPossibleRegionsByRServer <- function()
     return(possible.regions)
 }
 
-#' Used by Create New Variables - Recode Geography QScript
+#' Used by Create New Variables - Transform Geography QScript
 #' @noRd
 determineGUIControlInput <- function(text)
 {

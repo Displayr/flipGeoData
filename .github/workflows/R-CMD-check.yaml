@@ -68,7 +68,7 @@ jobs:
           path: ${{ runner.os }}_r${{ matrix.config.r }}.txt
 
   Create-Slack-notification:
-    needs: [ubuntu-latest (release), windows-latest (release), ubuntu-latest (devel)]
+    needs: R-CMD-check
     runs-on: ubuntu-latest
     if: always()
     steps:

@@ -210,11 +210,15 @@ orderPossibleRegionsByRServer <- function()
 
 #' Used by Create New Variables - Recode Geography QScript
 #' @noRd
-detemineGUIcontrolInput <- function(text)
+determineGUIControlInput <- function(text)
 {
     region <- detectRegion(text, NULL)
     input.type <- attr(region, "input.type")
     output.type <- deduceOutputType(input.type, region)
+    input.type <- sub("^([A-z])", "\\U\\1", input.type, perl = TRUE)
+    output.type <- sub("^([A-z])", "\\U\\1", output.type, perl = TRUE)
+    input.type <- sub("\\.", " ", input.type, perl = TRUE)
+    output.type <- sub("\\.", " ", output.type, perl = TRUE)
     return(c(region, input.type, output.type))
 }
 

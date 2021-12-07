@@ -9,6 +9,24 @@ test_that("Region detection works", {
     text <- australia.post.codes[idx, "suburb"]
     out <- RecodeGeography(text, output.type = "LGA")
 
+    text <- c("Aylmer South",
+              "North Central Island and Bute Inlet Region (Gold River)",
+              "Saskatoon Northeast",
+              "Etobicoke (Westmount)",
+              "Centre-du-Québec-Nord (Daveluyville)",
+              "Kananaskis Country (Claresholm)", "Sylvan Lake",
+              "Paris", "Quebec City South",
+              "South Okanagan (Summerland)", "Quebec City East",
+              "Burlington South", "Châteauguay South", "Espanola",
+              "Delta Central", "Lockport", "Saint-Bruno",
+              "Langley Township North",
+              "Scarborough (Birch Cliff / Cliffside West)",
+              "Whitby Central", "Kitchener West", "Nanaimo Central",
+              "Mississauga (Matheson / East Rathwood)",
+              "Peterborough North", "Debec",
+              "Prince Albert Central", "Petawawa")
+    out <- flipGeoData:::determineGUIControlInput(text)
+    expect_equal(out, c("Canada", "Place", "Postal code"))
 })
 
 test_that("Postcode to place conversion",

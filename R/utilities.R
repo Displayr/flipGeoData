@@ -3,7 +3,7 @@ data.list <- c(USA = "us.zip.codes",
                Europe = "euro.post.codes",
                UK = "uk.post.codes",
                Australia = "australia.post.codes",
-               `New Zealand` = "nz.post.codes")
+               `New Zealand` = "new.zealand.post.codes")
 available.types = list(USA = c("place", "zip.code", "region", "state", "county",
                                "latitude", "longitude"),
                        Canada = c("place", "postal.code", "region", "province",

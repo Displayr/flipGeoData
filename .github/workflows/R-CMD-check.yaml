@@ -99,6 +99,7 @@ jobs:
       - name: Set status color
         id: set_color
         if: always()
+        run: |
           echo ${{ steps.set_outputs.outputs.status_urel }} == 'failure'
           echo steps.set_outputs.outputs.status_urel == 'failure'
           if [${{ steps.set_outputs.outputs.status_urel }} == 'failure' || ${{ steps.set_outputs.outputs.status_wrel }} == 'failure' || ${{ steps.set_outputs.outputs.status_udev }} == 'failure']

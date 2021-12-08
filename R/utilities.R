@@ -288,3 +288,24 @@ regionToCountryCode <- function(region)
                       "New Zealand" = "NZ"))
     }
 }
+
+#' Convert input text that is all upper or all lower case to title case
+#' Only covert if text longer than 3 characters to avoid changing state abbreviations
+#' @noRd
+convertToTitleCaseIfNecessary <- function(txt)
+{
+    if (is.character(txt))
+    {
+        all.lower.or.upper <- grepl("^[[:upper:].'-]{4,}$|^[[:lower:].'-]{4,}$", txt)
+        txt[all.lower.or.upper] <-  gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", txt[all.lower.or.upper],
+                                         perl=TRUE)
+    }else if(is.factor(txt))
+    {
+        lvls <- levels(txt)
+        all.lower.or.upper <- grepl("^[[:upper:] .'-]{4,}$|^[[:lower:] .'-]{4,}$", lvls)
+        lvls[all.lower.or.upper] <- gsub("(\\w)(\\w*)", "\\U\\1\\L\\2", lvls[all.lower.or.upper],
+                                         perl=TRUE)
+        levels(txt) <- lvls
+    }
+    return(txt)
+}

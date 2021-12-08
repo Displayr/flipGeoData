@@ -27,6 +27,7 @@ RecodeGeography <- function(text,
                            min.matches = 5,
                            ...)
 {
+    text <- convertToTitleCaseIfNecessary(text)
     if (is.factor(text))
         text <- as.character(text)
     if (is.numeric(text))

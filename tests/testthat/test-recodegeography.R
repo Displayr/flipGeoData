@@ -135,6 +135,13 @@ test_that("Approx. matching with levenshtein dist.",
     expect_equal(out, expect.out)
 })
 
+test_that("Recoding works with non-title case",
+{
+    txt <- c("BROOKLYN", "BRONX", "BROOKLYN", "Flushing", "BROOKLYN",
+             "NEW YORK", "STATEN ISLAND", "BROOKLYN", "BROOKLYN")
+    ## out <- RecodeGeography(txt, input.type = "Place")
+})
+
 ## test_that("Recode geography finds state synonyms",
 ## {
 ##     txt <- c("MB", NA, "Alberta", "Newfoundland", "Québec")

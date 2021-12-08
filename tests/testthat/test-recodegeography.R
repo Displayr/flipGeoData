@@ -51,6 +51,17 @@ test_that("Region detection works", {
     expect_equal(out, structure("Europe", input.type = "state"))
 })
 
+test_that("Autodetect text postcodes",
+{
+    text <- as.character(c(3000, 2036, 6164, 3089, 3392,
+                           6150, 3585, 2560, 4119, 4101))
+    out <- detectRegion(text, NULL, 10)
+
+    text <- as.character(c(11206, 10462, 11231, 11354, 11205, 10010))
+    out <- determineGUIControlInput(text, 5)
+    expect_equal(out, c("USA", "ZIP code", "Place"))
+})
+
 test_that("Test input type detection works",
 {
     MIN.MATCHES  <- 5  # set in detectRegion()

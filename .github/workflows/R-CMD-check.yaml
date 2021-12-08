@@ -100,7 +100,8 @@ jobs:
         id: set_color
         if: always()
         run: |
-          if [${{ steps.set_outputs.outputs.status_urel }} == 'failure' || ${{ steps.set_outputs.outputs.status_wrel }} == 'failure' || ${{ steps.set_outputs.outputs.status_udev }} == 'failure']
+          echo ${{ steps.set_outputs.outputs.status_urel == 'failure'}}
+          if [${{ steps.set_outputs.outputs.status_urel == 'failure'}} || ${{ steps.set_outputs.outputs.status_wrel  == 'failure'}} || ${{ steps.set_outputs.outputs.status_udev == 'failure'}}]
           then
             echo "::set-output name=run_status_color::'danger'"
           else

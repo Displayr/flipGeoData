@@ -18,13 +18,12 @@ available.types = list(USA = c("place", "zip.code", "region", "state", "county",
                                          "latitude", "longitude"))
 utils::globalVariables(c("data.list", "available.types"))
 
-
 #' Given a vector of text containing geographic
 #' @noRd
-detectRegion <- function(text, input.type)
+detectRegion <- function(text, input.type, min.matches)
 {
     n <- length(text)
-    min.matches <- min(n, 5)
+    min.matches <- min(n, min.matches)
     batch.size <- min(n, 50)
     possible.regions <- orderPossibleRegionsByRServer()
     region <- NULL
@@ -47,7 +46,7 @@ detectRegion <- function(text, input.type)
                 if (input.type %in% available.types[[curr.region]])
                 {
                     matches <- findMatches(text.slice, curr.region, input.type)
-                    if (any(!is.na(matches)))
+                    if (sum(!is.na(matches)) >= min.matches)
                     {
                         region <- curr.region
                         break
@@ -70,9 +69,12 @@ detectRegion <- function(text, input.type)
 
 detectInputType <- function(text, region, min.matches = 1)
 {
+    n <- length(text)
+    min.matches <- min(n, min.matches)
     dat <- loadData(region)
     cols.to.check <- colnames(dat)
     cols.to.check <- cols.to.check[!cols.to.check %in% c('latitude', 'longitude')]
+    ## check factors first since want to match e.g. state/province first
     input.type <- NA
     for(col in cols.to.check)
     {
@@ -210,9 +212,9 @@ orderPossibleRegionsByRServer <- function()
 
 #' Used by Create New Variables - Transform Geography QScript
 #' @noRd
-determineGUIControlInput <- function(text)
+determineGUIControlInput <- function(text, min.matches = 5)
 {
-    region <- detectRegion(text, NULL)
+    region <- detectRegion(text, NULL, min.matches = min.matches)
     input.type <- attr(region, "input.type")
     output.type <- deduceOutputType(input.type, region)
     input.type <- sub("^([A-z])", "\\U\\1", input.type, perl = TRUE)

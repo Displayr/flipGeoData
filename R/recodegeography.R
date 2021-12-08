@@ -24,6 +24,7 @@ RecodeGeography <- function(text,
                            output.type = NULL,
                            check.synonyms = FALSE,
                            max.levenshtein.dist = 0,
+                           min.matches = 5,
                            ...)
 {
     if (is.factor(text))
@@ -37,12 +38,12 @@ RecodeGeography <- function(text,
     }
     if (is.null(region))
     {
-        region <- detectRegion(text, input.type)
+        region <- detectRegion(text, input.type, min.matches)
         if (is.null(input.type))
             input.type <- attr(region, "input.type")
     }
     if (is.null(input.type))
-        input.type <- detectInputType(text, region)
+        input.type <- detectInputType(text, region, min.matches)
 
     if (is.null(output.type))
         output.type <- deduceOutputType(input.type, region)

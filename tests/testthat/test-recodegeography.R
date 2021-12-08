@@ -38,7 +38,7 @@ test_that("Postcode to place conversion",
     zip <- us.zip.codes[["zip.code"]]
     idx1 <- which(zip == text[1])[1]
     idx2 <- which(zip == text[2])[1]
-    out.expect <- us.zip.codes[c(idx1, idx2), "state"]
+    out.expect <- as.character(us.zip.codes[c(idx1, idx2), "state"])
     expect_equal(out, out.expect)
 
     text <- c("00501", "01001")

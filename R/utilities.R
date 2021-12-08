@@ -131,8 +131,8 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
     if (grepl("(zip|post)\\.code", input.type) &&
         region %in% c("USA", "Australia", "New Zealand"))
     {
-        text <- as.integer(text)
-        found.idx <- text %in% tbl
+        text <- suppressWarnings(as.integer(text))
+        found.idx <- match(text, tbl, incomparables = NA)
     }else
     {
         found.idx <- chmatch(text, as.character(tbl))

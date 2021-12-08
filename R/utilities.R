@@ -8,7 +8,7 @@ available.types = list(USA = c("place", "zip.code", "region", "state", "county",
                                "latitude", "longitude"),
                        Canada = c("place", "postal.code", "region", "province",
                                   "latitude", "longitude"),
-                       Europe = c("place", "zip.code", "state", "province",
+                       Europe = c("place", "post.code", "state", "province",
                                   "community", "country.code", "latitude", "longitude"),
                        UK = c("place", "zip.code", "country", "county", "district",
                               "latitude", "longitude"),
@@ -157,7 +157,7 @@ convertTypeForRegionIfAvailable <- function(type, dat)
                "province",
                "county",
                "suburb|district|community",
-               "LGA",
+               "lga",
                "region",
                "country.code")
     patt <- grep(type, TYPES, ignore.case = TRUE, value = TRUE)

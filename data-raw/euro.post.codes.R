@@ -27,6 +27,8 @@ keep.codes <- c("AL", "AD", "AM", "AT", "AZ", "BY", "BE", "BA", "BG",
 
 euro.post.codes <- dat.full[dat.full[["country.code"]] %in% keep.codes, ]
 euro.post.codes[["country.code"]] <- as.factor(euro.post.codes[["country.code"]])
+euro.post.codes[["state"]] <- as.factor(euro.post.codes[["state"]])
+euro.post.codes[["province"]] <- as.factor(euro.post.codes[["province"]])
 
 keep.cols <- c("place", "post.code", "state", "province", "community",
                "country.code", "latitude", "longitude")

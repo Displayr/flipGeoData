@@ -107,7 +107,6 @@ jobs:
         if: always()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          channel: '#github-notifications'
           payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.workflow}} for commit ${{ steps.set_short_sha.outputs.sha }} in ${{github.repository}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\",\"style\":${{steps.set_outputs.outputs.run_status_color}}}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Ubuntu-latest (R-release): *${{ steps.set_outputs.outputs.status_urel }}*, Ubuntu-latest (R-devel): *${{ steps.set_outputs.outputs.status_udev }}*, Windows (R-release): *${{ steps.set_outputs.outputs.status_wrel }}*\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View run#${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\",\"style\":${{steps.set_outputs.outputs.run_status_color}}}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

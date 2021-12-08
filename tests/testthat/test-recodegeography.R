@@ -27,6 +27,28 @@ test_that("Region detection works", {
               "Prince Albert Central", "Petawawa")
     out <- flipGeoData:::determineGUIControlInput(text)
     expect_equal(out, c("Canada", "Place", "Postal code"))
+
+    idx <- c(328229L, 547317L, 430800L, 62274L, 313481L, 647785L, 56543L,
+             379100L, 351949L, 660222L, 330722L, 575803L, 475463L, 355318L,
+             181138L, 433512L, 393703L, 473552L, 61424L, 657960L, 52082L,
+             249937L, 650437L, 703110L, 617047L, 84521L, 409892L, 715458L,
+             424922L, 563215L, 69760L, 547414L, 153687L, 600144L, 41853L,
+             175490L, 690854L, 124972L, 568631L, 163376L, 356791L, 257322L,
+             535920L, 369239L, 415194L, 15683L, 441815L, 579529L, 471518L,
+             253835L, 689996L, 277130L, 450979L, 442274L, 183825L, 295216L,
+             126805L, 430374L, 386925L, 120106L, 19225L, 340490L, 437490L,
+             468590L, 527649L, 607916L, 106825L, 496418L, 401244L, 717863L,
+             498569L, 659319L, 217638L, 214047L, 278004L, 207289L, 581058L,
+             200046L, 306249L, 207230L, 376867L, 346891L, 715868L, 486621L,
+             629347L, 430979L, 551687L, 73886L, 431213L, 112565L, 348854L,
+             493299L, 508828L, 215899L, 344590L, 454413L, 402858L, 226473L,
+             332366L, 479803L)
+
+    data(euro.post.codes, package = "flipGeoData")
+    text <- euro.post.codes[idx, "state"]
+    ## Matches state first not place even though there are also matches in place
+    out <- flipGeoData:::detectRegion(text, NULL, 5)
+    expect_equal(out, structure("Europe", input.type = "state"))
 })
 
 test_that("Test input type detection works",

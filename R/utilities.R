@@ -73,8 +73,12 @@ detectInputType <- function(text, region, min.matches = 1)
     min.matches <- min(n, min.matches)
     dat <- loadData(region)
     cols.to.check <- colnames(dat)
-    cols.to.check <- cols.to.check[!cols.to.check %in% c('latitude', 'longitude')]
+    keep.col <- !cols.to.check %in% c('latitude', 'longitude')
+    cols.to.check <- cols.to.check[keep.col]
     ## check factors first since want to match e.g. state/province first
+    col.classes <- vapply(dat, class, "")[keep.col]
+    cols.to.check <- cols.to.check[order(col.classes, decreasing = TRUE)]
+
     input.type <- NA
     for(col in cols.to.check)
     {

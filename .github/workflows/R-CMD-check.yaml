@@ -95,8 +95,14 @@ jobs:
           echo "::set-output name=status_urel::$(<pass_status_Linux_rrelease/Linux_rrelease.txt)"
           echo "::set-output name=status_wrel::$(<pass_status_Windows_rrelease/Windows_rrelease.txt)"
           echo "::set-output name=status_udev::$(<pass_status_Linux_rdevel/Linux_rdevel.txt)"
-          echo $status_urel == 'failure'
-          if [$status_urel == 'failure' || $status_wrel == 'failure' || $status_udev == 'failure']
+
+      - name: Set status color
+        id: set_color
+        if: always()
+          echo ${{ steps.set_outputs.outputs.status_urel }} == 'failure'
+          echo steps.set_outputs.outputs.status_urel == 'failure'
+          if [${{ steps.set_outputs.outputs.status_urel }} == 'failure' || ${{ steps.set_outputs.outputs.status_wrel }} == 'failure' || ${{ steps.set_outputs.outputs.status_udev }} == 'failure']
+          then
             echo "::set-output name=run_status_color::'danger')"
           else
             echo "::set-output name=run_status_color::'primary')"
@@ -107,7 +113,7 @@ jobs:
         if: always()
         uses: slackapi/slack-github-action@v1.16.0
         with:
-          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.workflow}} for commit ${{ steps.set_short_sha.outputs.sha }} in ${{github.repository}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\",\"style\":${{steps.set_outputs.outputs.run_status_color}}}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Ubuntu-latest (R-release): *${{ steps.set_outputs.outputs.status_urel }}*, Ubuntu-latest (R-devel): *${{ steps.set_outputs.outputs.status_udev }}*, Windows (R-release): *${{ steps.set_outputs.outputs.status_wrel }}*\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View run#${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\",\"style\":${{steps.set_outputs.outputs.run_status_color}}}}]}"
+          payload: "{\"blocks\":[{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Workflow ${{github.workflow}} for commit ${{ steps.set_short_sha.outputs.sha }} in ${{github.repository}} by ${{github.actor}}.\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View commit\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/commit/${{github.sha}}\",\"action_id\":\"button-action\",\"style\":${{steps.set_color.outputs.run_status_color}}}},{\"type\":\"divider\"},{\"type\":\"section\",\"text\":{\"type\":\"mrkdwn\",\"text\":\"Ubuntu-latest (R-release): *${{ steps.set_outputs.outputs.status_urel }}*, Ubuntu-latest (R-devel): *${{ steps.set_outputs.outputs.status_udev }}*, Windows (R-release): *${{ steps.set_outputs.outputs.status_wrel }}*\"},\"accessory\":{\"type\":\"button\",\"text\":{\"type\":\"plain_text\",\"text\":\"View run#${{github.run_number}}\",\"emoji\":true},\"value\":\"click_me_123\",\"url\":\"${{github.server_url}}/${{github.repository}}/actions/runs/${{github.run_id}}\",\"action_id\":\"button-action\",\"style\":${{steps.set_color.outputs.run_status_color}}}}]}"
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK

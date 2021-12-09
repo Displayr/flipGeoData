@@ -45,7 +45,8 @@ detectRegion <- function(text, input.type, min.matches)
             {
                 if (input.type %in% available.types[[curr.region]])
                 {
-                    matches <- findMatches(text.slice, curr.region, input.type)
+                    matches <- findMatches(text.slice, curr.region, input.type,
+                                           input.type, 0, FALSE)
                     if (sum(!is.na(matches)) >= min.matches)
                     {
                         region <- curr.region

@@ -62,10 +62,9 @@ test_that("Autodetect text postcodes",
     expect_equal(out, c("USA", "ZIP code", "Place"))
 })
 
-test_that("Test input type detection works",
+test_that("Test input type detection with min.matches works",
 {
-    MIN.MATCHES  <- 5  # set in detectRegion()
-    ## three matches in state, but five in place --> detects place
+    ## three matches in place, but five in postcode --> detects postcode
     data(australia.post.codes, package = "flipGeoData")
     idx <- c(1599L, 12966L, 12875L, 7333L, 6618L, 14610L, 14820L, 4374L,
              15292L, 12591L, 11829L, 15356L, 9612L, 13230L, 16794L, 3145L,
@@ -80,6 +79,7 @@ test_that("Test input type detection works",
                       as.character(australia.post.codes[idx[4:8], "lga"]))
     expect_equal(out, expected.out)
 
+    ## lower min.matches, detects place
     out <- RecodeGeography(text, region = "Australia", output.type = "LGA",
                            min.matches = 3)
     expected.out <- c(as.character(australia.post.codes[idx[1:3], "lga"]),

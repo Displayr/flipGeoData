@@ -148,6 +148,14 @@ test_that("Recoding works with non-title case",
     expect_equal(out, expect.out)
 })
 
+test_that("Autodetection with non-title case",
+{
+    txt <- c("OTISVILLE","LAKE DELTON","CORAOPOLIS","MACON","JANESVILLE",
+             "CAPE CORAL","TAMPA","GILL","WOODWARD","ORLANDO")
+    expect_equal(flipGeoData:::determineGUIControlInput(txt),
+                 c("USA", "Place", "ZIP code"))
+})
+
 ## test_that("Recode geography finds state synonyms",
 ## {
 ##     txt <- c("MB", NA, "Alberta", "Newfoundland", "Québec")

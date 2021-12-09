@@ -221,6 +221,7 @@ orderPossibleRegionsByRServer <- function()
 #' @noRd
 determineGUIControlInput <- function(text, min.matches = 5)
 {
+    text <- convertToTitleCaseIfNecessary(text)
     region <- detectRegion(text, NULL, min.matches = min.matches)
     input.type <- attr(region, "input.type")
     output.type <- deduceOutputType(input.type, region)

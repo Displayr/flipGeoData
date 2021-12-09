@@ -1,6 +1,6 @@
 Package: flipGeoData
 Title: Collection of datasets of geographic data
-Version: 0.1.1
+Version: 0.1.2
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Contains postal codes, approximate latitude and longitude, state, and district information for cities and towns in Canada, the United States, Australia, New Zealand, the United Kingdom, and most European countries.

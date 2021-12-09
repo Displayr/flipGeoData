@@ -139,7 +139,13 @@ test_that("Recoding works with non-title case",
 {
     txt <- c("BROOKLYN", "BRONX", "BROOKLYN", "Flushing", "BROOKLYN",
              "NEW YORK", "STATEN ISLAND", "BROOKLYN", "BROOKLYN")
-    ## out <- RecodeGeography(txt, input.type = "Place")
+    out <- RecodeGeography(txt, input.type = "Place")
+    txt.tcase <- flipGeoData:::convertToTitleCaseIfNecessary(txt)
+    expect_equal(txt.tcase[7], "Staten Island")
+    data(us.zip.codes, package = "flipGeoData")
+    idx <- match(txt.tcase, us.zip.codes[["place"]])
+    expect.out <- us.zip.codes[["zip.code"]][idx]
+    expect_equal(out, expect.out)
 })
 
 ## test_that("Recode geography finds state synonyms",

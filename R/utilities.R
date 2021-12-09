@@ -20,8 +20,10 @@ utils::globalVariables(c("data.list", "available.types"))
 
 #' Given a vector of text containing geographic
 #' @noRd
-detectRegion <- function(text, input.type, min.matches)
+detectRegion <- function(text, input.type = NULL, min.matches = 5)
 {
+    if (!is.null(input.type))
+        input.type <- make.names(tolower(input.type))
     n <- length(text)
     min.matches <- min(n, min.matches)
     batch.size <- min(n, 50)

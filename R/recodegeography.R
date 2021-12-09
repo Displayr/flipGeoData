@@ -46,12 +46,12 @@ RecodeGeography <- function(text,
     if (is.null(input.type))
         input.type <- detectInputType(text, region, min.matches)
 
+    dat <- loadData(region)
+    input.type <- convertTypeForRegionIfAvailable(input.type, dat)
     if (is.null(output.type))
         output.type <- deduceOutputType(input.type, region)
     if (FALSE)  ## check it is possible to convert input.type to output.type
         errorIfInvalidTypes(input.type, output.type)
-    dat <- loadData(region)
-    input.type <- convertTypeForRegionIfAvailable(input.type, dat)
     output.type <- convertTypeForRegionIfAvailable(output.type, dat)
 
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,

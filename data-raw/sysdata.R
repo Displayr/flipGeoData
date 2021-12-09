@@ -47,7 +47,7 @@ column.class <- column.class[column.class == "factor"]
 for (column in names(column.class))
     Encoding(levels(admin1.df[[column]])) <- "UTF-8"
 keep.cols <- c("woe_name", "latitude", "longitude", "fips", "name_en",
-               "gn_name", "gns_name", "region", "postal", "code_hhasc",
+               "gn_name", "gns_name", "region", "postal", "code_hasc",
                "sameascity", "adm1_code", "iso_3166_2",
                "iso_a2", "adm0_sr", "name", "name_alt",
                "name_local", "type_en")

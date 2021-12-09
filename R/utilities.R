@@ -236,7 +236,7 @@ determineGUIControlInput <- function(text, min.matches = 5)
 findSynonyms <- function(text, region, type)
 {
     mapped.synonyms <- rep(NA_character_, length(text))
-    if (stateSynonymsRequested(region, type))
+    if (admin1SynonymsRequested(region, type))
         mapped.synonyms <- findAdmin1Synonyms(text, region)
     else if (region == "Europe" && type %in% c("place", "province", "community"))
         mapped.synonyms <- findSynonymsInTable(text)

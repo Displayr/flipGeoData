@@ -119,19 +119,19 @@ test_that("Approx. matching with levenshtein dist.",
                            output.type = "Zip Code",
                            max.levenshtein.dist = 0)
     expect.out <- rep(NA, length(txt))
-    expect.out[2] <- us.zip.codes[idx[2], "zip.code"]
+    expect.out[2] <- as.character(us.zip.codes[idx[2], "zip.code"])
     expect_equal(out, expect.out)
 
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
                            output.type = "Zip Code",
                            max.levenshtein.dist = 1)
-    expect.out[1:3] <- us.zip.codes[idx[1:3], "zip.code"]
+    expect.out[1:3] <- as.character(us.zip.codes[idx[1:3], "zip.code"])
     expect_equal(out, expect.out)
 
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
                            output.type = "Zip Code",
                            max.levenshtein.dist = 4)
-    expect.out[4] <- us.zip.codes[idx[4], "zip.code"]
+    expect.out[4] <- as.character(us.zip.codes[idx[4], "zip.code"])
     expect_equal(out, expect.out)
 })
 
@@ -154,6 +154,50 @@ test_that("Autodetection with non-title case",
              "CAPE CORAL","TAMPA","GILL","WOODWARD","ORLANDO")
     expect_equal(flipGeoData:::determineGUIControlInput(txt),
                  c("USA", "Place", "ZIP code"))
+})
+
+test_that("Can find matches in neighbouring regions",
+{
+    txt <- c("Vancouver", "Winnipeg", "New York", "Washington", "Toronto")
+    out <- RecodeGeography(txt, region = "USA", input.type = "Place",
+                           output.type = "Postcode")
+    data(us.zip.codes, package = "flipGeoData")
+    idx <- match(txt, us.zip.codes[["place"]])
+    expected.out <- as.character(us.zip.codes[idx, "zip.code"])
+    expect_equal(out, expected.out)
+
+    out <- RecodeGeography(txt, region = "USA", input.type = "Place",
+                           output.type = "Postcode", check.neighboring.region = TRUE)
+    txt.na <- txt[is.na(expected.out)]
+    data(canada.postal.codes, package = "flipGeoData")
+    out.na <- canada.postal.codes[match(txt.na, canada.postal.codes[["place"]]),
+                                  "postal.code"]
+    expected.out[is.na(expected.out)] <- out.na
+    expect_equal(out, expected.out)
+
+    out <- RecodeGeography(txt, region = "Canada", input.type = "Place",
+                           output.type = "Postcode", check.neighboring.region = FALSE)
+    idx <- match(txt, canada.postal.codes[["place"]])
+    expected.out <- canada.postal.codes[idx, "postal.code"]
+    expect_equal(out, expected.out)
+
+    out <- RecodeGeography(txt, region = "Canada", input.type = "Place",
+                           output.type = "Postcode", check.neighboring.region = TRUE)
+    txt.na <- txt[is.na(expected.out)]
+    out.na <- us.zip.codes[match(txt.na, us.zip.codes[["place"]]),
+                                  "zip.code"]
+    expected.out[is.na(expected.out)] <- out.na
+    expect_equal(out, expected.out)
+
+    txt <- c("Castellón", "Staffordshire", "Ourense", "Paredes", "Valongo",
+             "Berkshire")
+    out <- RecodeGeography(txt, region = "Europe", check.neighboring.region = TRUE)
+    expect_equal(out[c(2, 5)], c("England", "England"))
+
+    txt <- c("City Of Gosnells", "Albert-Eden", "Adelaide City Council", "Whau")
+    out <- RecodeGeography(txt, region = "New Zealand", input.type = "lga",
+                           output.type = "Region", check.neighboring.region = TRUE)
+    expect_equal(out, c("Western Australia", "Auckland", "South Australia", "Auckland"))
 })
 
 ## test_that("Recode geography finds state synonyms",

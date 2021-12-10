@@ -23,6 +23,7 @@ RecodeGeography <- function(text,
                            input.type = NULL,
                            output.type = NULL,
                            check.synonyms = FALSE,
+                           check.neighboring.region = FALSE,
                            max.levenshtein.dist = 0,
                            min.matches = 5,
                            ...)
@@ -64,10 +65,12 @@ RecodeGeography <- function(text,
                                  max.dist = 0)
         found[na.idx] <- found.syn
     }
-    if (FALSE && anyNA(found))
+    if (check.neighboring.region && anyNA(found))
     {
-        ## findMatchesInNeighbouringRegion(text, region, input.type,
-        ##                                 output.type, max.levenshtein.dist, ...)
+        na.idx <- which(is.na(found))
+        found.nhbr <- findMatchesInNeighbouringRegion(text[na.idx], region, input.type,
+                                                      output.type, max.levenshtein.dist, ...)
+        found[na.idx] <- found.nhbr
     }
 
     found <- as.character(found)

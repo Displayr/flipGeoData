@@ -152,12 +152,11 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
         }
     }
 
-    found <- rep(NA_character_, length(text))
-    found <- dat[found.idx, output.type]
+    found <- as.character(dat[found.idx, output.type])
     return(found)
 }
 
-convertTypeForRegionIfAvailable <- function(type, dat)
+convertTypeForRegionIfAvailable <- function(type, dat, must.work = TRUE)
 {
     type <- make.names(tolower(type))
     TYPES <- c("place|city|town",
@@ -172,6 +171,8 @@ convertTypeForRegionIfAvailable <- function(type, dat)
     patt <- grep(type, TYPES, ignore.case = TRUE, value = TRUE)
     if (!length(patt))
     {
+        if (!must.work)
+            return(NA)
         valid.types <- paste0(gsub("\\|", "/", TYPES), collapse = ", ")
         stop("The requested type is not valid. ", sQuote("input.type"), " and ",
              sQuote("output.type"), " can be any of: ", valid.types, ".", call. = FALSE)
@@ -180,6 +181,8 @@ convertTypeForRegionIfAvailable <- function(type, dat)
     col.name <- grep(patt, col.names, value = TRUE)
     if (!length(col.name))
     {
+        if (!must.work)
+            return(NA)
         available.names <- paste0(col.names[!col.names %in% c('latitude',
                                                        'longitude', "country.code")],
                                   collapse = ", ")
@@ -312,4 +315,36 @@ convertToTitleCaseIfNecessary <- function(txt)
         levels(txt) <- lvls
     }
     return(txt)
+}
+
+findMatchesInNeighbouringRegion <- function(text, region, input.type,
+                                            output.type, max.dist, ...)
+{
+    neighbor <- switch(region, USA = "Canada", Canada = "USA",
+                       Europe = "UK", UK = "Europe", Australia = "New Zealand",
+                       "New Zealand" = "Australia")
+    TYPE.MAP <- list("USA|Canada" = c(place = "place", zip.code = "postal.code",
+                                      region = "region", state = "province", county = NA),
+                     "Europe|UK"= c(place = "place", post.code = "post.code",
+                                    state = "country", province = "county",
+                                    community = "district", country.code = "country"),
+                     "Australia|New Zealand" = c(place = "place", post.code = "post.code",
+                                                 state = "region", suburb = NA, lga = "lga",
+                                                 region = "region"))
+    nbhr.pair <- grep(neighbor, names(TYPE.MAP), fixed = TRUE, value = TRUE)
+    nbhr.type.map <- TYPE.MAP[[nbhr.pair]]
+    if (startsWith(nbhr.pair, neighbor))
+    {
+        nbhr.input.type <- names(nbhr.type.map)[match(input.type, nbhr.type.map)]
+        nbhr.output.type <- names(nbhr.type.map)[match(output.type, nbhr.type.map)]
+    }else  # endsWith(nbhr.pair, neighbor)
+    {
+        nbhr.input.type <- nbhr.type.map[input.type]
+        nbhr.output.type <- nbhr.type.map[output.type]
+        if (is.na(nbhr.input.type) || is.na(nbhr.output.type))
+            return(rep(NA_character_, length(txt)))
+    }
+
+    ## data(list = data.list[[neighbor]], package = "flipGeoData", envir = environment())
+    return(findMatches(text, neighbor, nbhr.input.type, nbhr.output.type, max.dist, FALSE))
 }

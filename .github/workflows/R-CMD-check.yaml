@@ -44,7 +44,7 @@ jobs:
 
       - name: Resave rda files
         run: tools::resaveRdaFiles("data")
-        shell: Rscript
+        shell: Rscript {0}
 
       - uses: r-lib/actions/check-r-package@v1
 

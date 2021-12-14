@@ -43,7 +43,8 @@ jobs:
           extra-packages: rcmdcheck
 
       - uses: r-lib/actions/check-r-package@v1
-        with: build_args: "--resave-data"
+        with: 
+          build_args: "--resave-data"
 
       - name: Show testthat output
         if: always()

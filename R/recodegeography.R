@@ -33,9 +33,10 @@ RecodeGeography <- function(text,
         text <- as.character(text)
     if (is.numeric(text))
     {
-        if (!is.null(input.type) && input.type != "Postcode")
+        if (!is.null(input.type) && !grepl("^(zip|post(al)?)[ .]?code$", input.type,
+                                           ignore.case = TRUE))
             stop("The input data is numeric, but the ", sQuote("input.type"),
-                 " parameter is ", dQuote(input.type), ". Only post codes can be",
+                 " parameter is ", dQuote(input.type), ". Only postcodes can be",
                  " numeric.")
     }
     if (is.null(region))

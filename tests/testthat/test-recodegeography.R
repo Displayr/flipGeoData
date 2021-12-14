@@ -92,6 +92,8 @@ test_that("Postcode to place conversion",
     text <- c(501, 1001)
     out <- RecodeGeography(text, region = "USA", input.type = "Postcode",
                            output.type = "State")
+    expect_error(RecodeGeography(text, region = "USA", input.type = "Region",
+                           output.type = "State"), "Only postcodes can be numeric.")
     data(us.zip.codes, package = "flipGeoData")
     zip <- us.zip.codes[["zip.code"]]
     idx1 <- which(zip == text[1])[1]

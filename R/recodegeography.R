@@ -17,12 +17,58 @@
 ## multiple input types?
 ## a single misspelled input
 ## speed of NZ region autodetect (when not on reausprod); try gcinfo(TRUE)
+#' Recode geographic data to another geographic type
+#'
+#' Maps text containing geographic information (such as place names or
+#' postcodes) for a world region to another type (such as
+#' state/province or region).
+#' @param text Character vector containing geographic text to be
+#'     converted.
+#' @param region String; providing the world region that the data in
+#'     \code{text} comes from. Currently supported values are
+#'     \code{"USA"}, \code{"Europe"}, \code{"Canada"}, \code{"UK"},
+#'     \code{"Australia"}, \code{"New Zealand"}, or \code{NULL}. If
+#'     \code{NULL}, an attempt is made to deduce the region
+#'     automatically from \code{text}.
+#' @param input.type String; the input type of \code{text},
+#'     e.g. \code{"Postcode"} or \code{"Place"}. See the package data
+#'     sets, \code{data(package='flipGeoData')}, for a list of
+#'     supported types for each region. If \code{NULL}, an attempt is
+#'     made to deduce the region automatically from \code{text} and
+#'     \code{region}.
+#' @param input.type String; the input type of \code{text},
+#'     e.g. \code{"Postcode"} or \code{"LGA"}. See the package data
+#'     sets, \code{data(package='flipGeoData')}, for a list of
+#'     supported types for each region. Can be \code{NULL}, in which
+#'     case it will be set based on the \code{input.type}.
+#' @param check.neighboring.region Logical; if \code{TRUE}, then the
+#'     nearest neighbouring region to \code{region} will also be
+#'     checked for matches; i.e. \code{"Canada"} will be checked for
+#'     matches in \code{text} when \code{region} is code{"USA"},
+#'     \code{"New Zealand"} will also be checked when \code{region} is
+#'     \code{"Australia"}, and \code{"UK"} will be checked when region
+#'     is code{"Europe"}, and vice versa.
+#' @param max.levenshtein.dist Integer; controlling approximate string
+#'     matching; the maximum levenshtein distance allowed for input
+#'     text to be considered a match for a value in the region's data
+#'     set; see \code{\link{amatch}}. The default, \code{0}, means
+#'     matches must be exact.
+#' @param min.matches Integer; when automatically detecting
+#'     \code{region} or \code{input.type} the minimum matches that
+#'     must be present in \code{text} for a match for
+#'     region/input.type to be considered found; default \code{5}.
+#' @param ... Currently ignored.
+#' @seealso \link{us.zip.codes}, \link{canada.postal.codes},
+#'     \link{uk.post.codes}, \link{euro.post.codes},
+#'     \link{australia.post.codes}, \link{new.zealand.post.codes}.
 #' @export
+#' @examples
+#' RecodeGeography(501, region = "USA", input.type = "ZIP code", output.type = "Place")
+#' RecodeGeography(c("Manitoba", "Quebec"))
 RecodeGeography <- function(text,
                            region = NULL,
                            input.type = NULL,
                            output.type = NULL,
-                           check.synonyms = FALSE,
                            check.neighboring.region = FALSE,
                            max.levenshtein.dist = 0,
                            min.matches = 5,
@@ -58,7 +104,7 @@ RecodeGeography <- function(text,
 
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
                        check.types = FALSE, ...)
-    if (check.synonyms && anyNA(found))
+    if (FALSE && anyNA(found))
     {
         na.idx <- which(is.na(found))
         mapped.synonyms <- findSynonyms(text[na.idx], region, input.type)

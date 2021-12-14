@@ -342,7 +342,7 @@ findMatchesInNeighbouringRegion <- function(text, region, input.type,
         nbhr.input.type <- nbhr.type.map[input.type]
         nbhr.output.type <- nbhr.type.map[output.type]
         if (is.na(nbhr.input.type) || is.na(nbhr.output.type))
-            return(rep(NA_character_, length(txt)))
+            return(rep(NA_character_, length(text)))
     }
 
     ## data(list = data.list[[neighbor]], package = "flipGeoData", envir = environment())

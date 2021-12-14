@@ -128,7 +128,7 @@ RecodeGeography <- function(text,
 #' @noRd
 loadData <- function(region)
 {
-    env <- environment()
+    env <- new.env()
     data.set.name <- data.list[[region]]
     data(list = data.set.name, package = "flipGeoData", envir = env)
     return(get(data.set.name, envir = env))

@@ -108,6 +108,31 @@ test_that("Postcode to place conversion",
     expect_equal(out, out.expect)
 })
 
+test_that("More stringent checking of integer postcodes",
+{
+    ## EU postcodes with matches in AZ and NZ
+    text <- c("7000", "7071", "2443", "2485", "2491", "7011", "7012", "7013",
+              "7033", "7034", "7035", "7041", "7051", "7052", "7053", "7061",
+              "7062", "7063", "7064", "7072", "7081", "7082", "7083", "7091",
+              "7521", "7522", "7533", "7534", "7535", "7536", "7537", "7540",
+              "7542", "7543", "7544", "7551", "7552", "8291", "8292", "8293",
+              "7561", "7562", "7563", "7564", "7571", "7572", "8282", "8350",
+              "8380", "8382")
+    out <- detectRegion(text)
+    expect_equal(out, "Europe", check.attributes = FALSE)
+
+    ## 50 NZ postcodes with 41 matches in Europe
+    text <- c(9074L, 4999L, 4572L, 2155L, 9387L, 542L, 174L, 3176L, 9750L,
+              4193L, 9023L, 7673L, 2697L, 981L, 5014L, 6972L, 3078L, 2473L,
+              9043L, 7980L, 3025L, 9346L, 6022L, 176L, 741L, 5810L, 4884L,
+              9881L, 1541L, 3243L, 7681L, 4397L, 9092L, 4815L, 2693L, 7772L,
+              7348L, 2245L, 1071L, 754L, 4141L, 9048L, 4817L, 4942L, 9395L,
+              9641L, 7007L, 4378L, 7198L, 281L)
+    out <- RecodeGeography(text, output.type = "Region")
+    data(new.zealand.post.codes, package = "flipGeoData")
+    expect_true(all(out %in% levels(new.zealand.post.codes[["region"]])))
+})
+
 test_that("Approx. matching with levenshtein dist.",
 {
     data(us.zip.codes, package = "flipGeoData")

@@ -65,9 +65,49 @@ detectRegion <- function(text, input.type = NULL, min.matches = 5)
         stop("Unable to automatically determine region for the given input data. ",
              "Please specify the region and type of the input data and try again.")
 
+    possible.int.postcodes <- grepl("^zip|^post", type) && region %in% c("USA",
+                                                              "Australia", "Europe", "New Zealand")
+    if (possible.int.postcodes) {
+        region <- disambiguateIntegerPostcodes(text)
+        type <- ifelse(region == "USA", "zip.code", "post.code")
+    }
     if (is.null(input.type))
         attr(region, "input.type") <- type
     return(region)
+}
+
+disambiguateIntegerPostcodes <- function(text)
+{
+    MIN.MATCH.PROP <- .95
+    txt.c <- text[!is.na(text)]
+    n.char <- nchar(txt.c)
+    txt.c <- txt.c[n.char > 0]
+    if (any(n.char > 5) || any(grepl("[A-z -]", txt.c)))
+        return("Europe")
+
+    .checkPostCodes <- function(post.codes, region)
+    {
+        dat <- loadData(region)
+        pc.name <- ifelse(region == "USA", "zip.code", "post.code")
+        mean(post.codes %in% dat[[pc.name]], na.rm = TRUE)
+    }
+
+    if (mean(grepl("^[0-9]{3,4}$", txt.c)) >= MIN.MATCH.PROP)
+    {  # could be any of Aus, NZ, Europe, USA; require ~all matching to declare region
+        possible.regions <- c("Australia", "New Zealand", "USA", "Europe")
+    }else  # text contains some five-digit numbers
+        possible.regions <- c("USA", "Europe")
+
+    pc.int <- suppressWarnings(as.integer(txt.c))
+    match.props <- NULL
+    for (r in possible.regions)
+    {
+        rprop <- .checkPostCodes(pc.int, r)
+        if (rprop >= MIN.MATCH.PROP)
+            return(r)
+        match.props <- c(match.props, rprop)
+    }
+    return(possible.regions[which.min(match.props)])
 }
 
 detectInputType <- function(text, region, min.matches = 1)

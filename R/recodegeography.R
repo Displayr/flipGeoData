@@ -36,7 +36,7 @@
 #'     supported types for each region. If \code{NULL}, an attempt is
 #'     made to deduce the region automatically from \code{text} and
 #'     \code{region}.
-#' @param input.type String; the input type of \code{text},
+#' @param output.type String; the input type of \code{text},
 #'     e.g. \code{"Postcode"} or \code{"LGA"}. See the package data
 #'     sets, \code{data(package='flipGeoData')}, for a list of
 #'     supported types for each region. Can be \code{NULL}, in which
@@ -106,11 +106,11 @@ RecodeGeography <- function(text,
                        check.types = FALSE, ...)
     if (FALSE && anyNA(found))
     {
-        na.idx <- which(is.na(found))
-        mapped.synonyms <- findSynonyms(text[na.idx], region, input.type)
-        found.syn <- findMatches(mapped.synonyms, region, input.type, output.type,
-                                 max.dist = 0)
-        found[na.idx] <- found.syn
+        ## na.idx <- which(is.na(found))
+        ## mapped.synonyms <- findSynonyms(text[na.idx], region, input.type)
+        ## found.syn <- findMatches(mapped.synonyms, region, input.type, output.type,
+        ##                          max.dist = 0)
+        ## found[na.idx] <- found.syn
     }
     if (check.neighboring.region && anyNA(found))
     {

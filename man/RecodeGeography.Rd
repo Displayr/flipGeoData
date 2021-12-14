@@ -27,6 +27,13 @@ converted.}
 automatically from \code{text}.}
 
 \item{input.type}{String; the input type of \code{text},
+e.g. \code{"Postcode"} or \code{"Place"}. See the package data
+sets, \code{data(package='flipGeoData')}, for a list of
+supported types for each region. If \code{NULL}, an attempt is
+made to deduce the region automatically from \code{text} and
+\code{region}.}
+
+\item{output.type}{String; the input type of \code{text},
 e.g. \code{"Postcode"} or \code{"LGA"}. See the package data
 sets, \code{data(package='flipGeoData')}, for a list of
 supported types for each region. Can be \code{NULL}, in which

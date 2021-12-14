@@ -24,7 +24,7 @@ information in other data sets.
 \item country.code - two-character country code for the country in ISO-3166 format.
 \item in.europe - logical indicating whether the country is located in Europe.
 \item post.codes.available - logical indicating whether post code information is available for the country in one of the post code data files in the package.
-\item synonyms.available - logical indicating whether synonym place names are available in \code{\link{synonyms}}
+\item synonyms.available - logical indicating whether synonym place names are available from \url{https://download.geonames.org/export/zip/}.
 }
 }
 \keyword{datasets}

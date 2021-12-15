@@ -377,7 +377,7 @@ regionToCountryCode <- function(region)
         return(switch(region,
                       USA = "US",
                       Canada = "CA",
-                      Australia = "",
+                      Australia = "AU",
                       UK = "GB",
                       "New Zealand" = "NZ",
                       stop("Invalid region specified.", call. = FALSE)))

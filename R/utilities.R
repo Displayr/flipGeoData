@@ -207,7 +207,7 @@ convertTypeForRegionIfAvailable <- function(type, dat, must.work = TRUE)
                "suburb|district|community",
                "lga",
                "region",
-               "country(.code)?")
+               "country|country.code")
     patt <- grep(type, TYPES, ignore.case = TRUE, value = TRUE)
     if (!length(patt))
     {

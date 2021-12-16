@@ -250,3 +250,37 @@ test_that("Can find matches in neighbouring regions",
 ##                            output.type = "district",
 ##                            check.synonyms = TRUE)
 ## })
+
+## Test each input type and output type for each region
+avail.types <- flipGeoData:::available.types
+avail.types <- lapply(avail.types, function(types)
+    types[!types %in% c("latitude", "longitude")])
+in.idx <- c(50L, 101L, 256L, 575L, 1010L)
+for (region in names(available.types))
+{
+    dat <- flipGeoData:::loadData(region)
+    types <- avail.types[[region]]
+    types <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", types, perl = TRUE)
+    types <- sub("\\.", " ", types, perl = TRUE)
+    for (input.type in types)
+    {
+        cname.in <- make.names(tolower(input.type))
+        otypes <- types[match(input.type, types):length(types)]
+        if (grepl("^ZIP|^Post", input.type))
+            otypes <- c("Place", otypes)
+        for (output.type in otypes)
+        {
+            cname.out <- make.names(tolower(output.type))
+            txt.in <- dat[in.idx, cname.in]
+            match.idx <- match(txt.in, dat[[cname.in]])
+            expected.out <- as.character(dat[match.idx, cname.out])
+            out <- RecodeGeography(txt.in, region = region, input.type = input.type,
+                                   output.type = output.type)
+            desc <- paste0("Recode ", input.type, " to ", output.type, " for ", region)
+            test_that(desc,
+                      expect_equal(RecodeGeography(txt.in, region = region,
+                                                   input.type = input.type, output.type = output.type),
+                                   expected.out))
+        }
+    }
+}

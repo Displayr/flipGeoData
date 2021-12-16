@@ -19,9 +19,11 @@ Postcode unit, approximate latitude/longitude, county, and district/community in
 \details{
 \itemize{
 \item place - character string place name
-\item zip.code - string with 6-8 characters providing the full postcode unit
+\item post.code - string with 6-8 characters providing the full postcode unit
 (incode and outcode) for \code{place}
 \item country - Factor with six levels; country/1st order administrative subdivision
+\item region - Factor with 14 levels; one of the nine regions of England or identical
+to \code{country} if \code{place} is outside England.
 \item county - Factor with 92 levels; county/2nd order administrative subdivision
 \item district - Character; community/district/3rd order administrative subdivision
 \item latitude - Numeric, approximate latitude for region/place

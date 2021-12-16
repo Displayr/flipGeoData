@@ -274,8 +274,6 @@ for (region in names(available.types))
             txt.in <- dat[in.idx, cname.in]
             match.idx <- match(txt.in, dat[[cname.in]])
             expected.out <- as.character(dat[match.idx, cname.out])
-            out <- RecodeGeography(txt.in, region = region, input.type = input.type,
-                                   output.type = output.type)
             desc <- paste0("Recode ", input.type, " to ", output.type, " for ", region)
             test_that(desc,
                       expect_equal(RecodeGeography(txt.in, region = region,

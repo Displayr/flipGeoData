@@ -6,6 +6,7 @@
 \usage{
 RecodeGeography(
   text,
+  text.extra = NULL,
   region = NULL,
   input.type = NULL,
   output.type = NULL,
@@ -18,6 +19,13 @@ RecodeGeography(
 \arguments{
 \item{text}{Character vector containing geographic text to be
 converted.}
+
+\item{text.extra}{Character vector of the same length as
+\code{text} that provides additional info when \code{text}
+could match multiple places in a region. Ignored if
+\code{input.type} is not \code{"Place"} or auto-detected as
+such. E.g. \code{text.extra} could contain state information to
+disambiguate place names in \code{text} that occur in multiple states.}
 
 \item{region}{String; providing the world region that the data in
 \code{text} comes from. Currently supported values are

@@ -282,3 +282,17 @@ for (region in names(available.types))
         }
     }
 }
+
+
+test_that("Can supply extra text to disambiguate places",
+{
+    txt <- c("Brooklyn", "Jackson", "Baltimore", "Brooklyn", "FooBar")
+    txt.extra <- c("New York", "Mississippi", "Maryland", "Wisconsin", "Washington")
+    out <- RecodeGeography(text = txt, text.extra = txt.extra, region = "USA",
+                           input.type = "Place")
+    data(us.zip.codes, package = "flipGeoData")
+    tbl <- paste0(us.zip.codes[["place"]], us.zip.codes[["state"]])
+    idx <- match(paste0(txt, txt.extra), tbl)
+    expected.out <- us.zip.codes[idx, "zip.code"]
+    expect_equal(out, as.character(expected.out))
+})

@@ -167,7 +167,7 @@ deduceOutputType <- function(input.type, region)
 #' @importFrom data.table chmatch
 #' @noRd
 findMatches <- function(text, region, input.type, output.type, max.dist = 2,
-                        check.types = FALSE, ...)
+                        check.types = FALSE, text.extra, ...)
 {
     dat <- loadData(region)
     if (check.types)
@@ -190,10 +190,39 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
             na.idx <- which(is.na(found.idx))
             found.idx[na.idx] <- findNearMatches(text[na.idx], tbl, max.dist, ...)
         }
+        if (input.type == "place" && !is.null(text.extra))
+            found.idx <- disambiguatePlaceInputs(found.idx, text, text.extra,
+                                                 dat, region, max.dist)
     }
 
     found <- as.character(dat[found.idx, output.type])
     return(found)
+}
+
+disambiguatePlaceInputs <- function(match.idx, text, disambig.text, dat, region, max.dist)
+{
+    ## check if found indexes are possible duplicates
+    if (length(text) != length(disambig.text))
+        stop("The length of ", sQuote("text.extra"), " must match the length of ",
+             sQuote(text), "(", length(text), ").")
+    ## determine input type for disambig.text
+    found.place <- !is.na(match.idx)
+    disambig.text <- as.character(disambig.text)
+    to.search.idx <- found.place & !is.na(disambig.text) & nzchar(disambig.text)
+    if (any(to.search.idx))
+    {
+        txt <- paste0(text[to.search.idx], disambig.text[to.search.idx])
+        disambig.type <- detectInputType(disambig.text, region, min.matches = 1)
+        tbl <- paste0(dat[["place"]], dat[[disambig.type]])
+        if (max.dist == 0)
+            new.match.idx <- chmatch(txt, tbl)
+        else
+            new.match.idx <- findNearMatches(txt, tbl, max.dist)
+        found.both <- !is.na(new.match.idx)
+        match.idx[to.search.idx[found.both]] <- new.match.idx[found.both]
+    }
+    ## for each potential duplicate, append disambig.text and find match
+    return(match.idx)
 }
 
 convertTypeForRegionIfAvailable <- function(type, dat, must.work = TRUE)

@@ -24,6 +24,12 @@
 #' state/province or region).
 #' @param text Character vector containing geographic text to be
 #'     converted.
+#' @param text.extra Character vector of the same length as
+#'     \code{text} that provides additional info when \code{text}
+#'     could match multiple places in a region. Ignored if
+#'     \code{input.type} is not \code{"Place"} or auto-detected as
+#'     such. E.g. \code{text.extra} could contain state information to
+#'     disambiguate place names in \code{text} that occur in multiple states.
 #' @param region String; providing the world region that the data in
 #'     \code{text} comes from. Currently supported values are
 #'     \code{"USA"}, \code{"Europe"}, \code{"Canada"}, \code{"UK"},
@@ -66,6 +72,7 @@
 #' RecodeGeography(501, region = "USA", input.type = "ZIP code", output.type = "Place")
 #' RecodeGeography(c("Manitoba", "Quebec"))
 RecodeGeography <- function(text,
+                            text.extra = NULL,
                            region = NULL,
                            input.type = NULL,
                            output.type = NULL,
@@ -103,7 +110,7 @@ RecodeGeography <- function(text,
     output.type <- convertTypeForRegionIfAvailable(output.type, dat)
 
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
-                       check.types = FALSE, ...)
+                       check.types = FALSE, text.extra, ...)
     if (FALSE && anyNA(found))
     {
         ## na.idx <- which(is.na(found))

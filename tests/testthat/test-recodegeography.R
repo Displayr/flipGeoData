@@ -72,14 +72,14 @@ test_that("Test input type detection with min.matches works",
              6550L, 4441L, 12759L, 355L, 13594L, 15132L, 12546L, 5708L, 14491L,
              4498L, 2655L, 11032L, 3058L, 12089L, 7704L, 14047L, 1226L, 11646L,
              15377L, 16276L, 7081L, 15306L, 14633L, 7942L, 14135L)
-    text <- c(australia.post.codes[idx[1:3], "place"],
-              australia.post.codes[idx[4:8], "post.code"])
+    text <- c(australia.post.codes[idx[1:3], "post.code"],
+              australia.post.codes[idx[4:8], "place"])
     out <- RecodeGeography(text, region = "Australia", output.type = "LGA")
     expected.out <- c(rep(NA_character_, 3),
                       as.character(australia.post.codes[idx[4:8], "lga"]))
     expect_equal(out, expected.out)
 
-    ## lower min.matches, detects place
+    ## lower min.matches, detects post.code
     out <- RecodeGeography(text, region = "Australia", output.type = "LGA",
                            min.matches = 3)
     expected.out <- c(as.character(australia.post.codes[idx[1:3], "lga"]),

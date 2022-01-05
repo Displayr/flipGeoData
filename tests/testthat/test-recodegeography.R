@@ -13,11 +13,11 @@ test_that("Region detection works", {
               "North Central Island and Bute Inlet Region (Gold River)",
               "Saskatoon Northeast",
               "Etobicoke (Westmount)",
-              "Centre-du-Québec-Nord (Daveluyville)",
+              "Centre-du-Qu\u00E9bec-Nord (Daveluyville)",
               "Kananaskis Country (Claresholm)", "Sylvan Lake",
               "Paris", "Quebec City South",
               "South Okanagan (Summerland)", "Quebec City East",
-              "Burlington South", "Châteauguay South", "Espanola",
+              "Burlington South", "Ch\u00E2teauguay South", "Espanola",
               "Delta Central", "Lockport", "Saint-Bruno",
               "Langley Township North",
               "Scarborough (Birch Cliff / Cliffside West)",
@@ -216,7 +216,7 @@ test_that("Can find matches in neighbouring regions",
     expected.out[is.na(expected.out)] <- out.na
     expect_equal(out, expected.out)
 
-    txt <- c("Castellón", "Staffordshire", "Ourense", "Paredes", "Valongo",
+    txt <- c("Castell\u00F3n", "Staffordshire", "Ourense", "Paredes", "Valongo",
              "Berkshire")
     out <- RecodeGeography(txt, region = "Europe", check.neighboring.region = TRUE)
     expect_equal(out[c(2, 6)], c("England", "England"))

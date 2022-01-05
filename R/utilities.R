@@ -33,7 +33,8 @@ detectRegion <- function(text, input.type = NULL, min.matches = 5)
     possible.regions <- orderPossibleRegionsByRServer()
     region <- NULL
     idx <- seq_len(batch.size)
-    while (is.null(region) && idx[length(idx)] <= n)
+    max.idx <- 1
+    while (is.null(region) && max.idx < n)
     {
         text.slice <- text[idx]
         for (curr.region in names(data.list))

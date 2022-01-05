@@ -23,7 +23,10 @@ utils::globalVariables(c("data.list", "available.types"))
 detectRegion <- function(text, input.type = NULL, min.matches = 5)
 {
     if (!is.null(input.type))
+    {
         input.type <- make.names(tolower(input.type))
+        type <- input.type
+    }
     n <- length(text)
     min.matches <- min(n, min.matches)
     batch.size <- min(n, 50)

@@ -167,7 +167,7 @@ deduceOutputType <- function(input.type, region)
 #' @importFrom data.table chmatch
 #' @noRd
 findMatches <- function(text, region, input.type, output.type, max.dist = 2,
-                        check.types = FALSE, text.extra, ...)
+                        check.types = FALSE, text.extra = NULL, ...)
 {
     dat <- loadData(region)
     if (check.types)

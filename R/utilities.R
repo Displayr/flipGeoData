@@ -303,10 +303,16 @@ determineGUIControlInput <- function(text, min.matches = 5)
     input.type <- attr(region, "input.type")
     output.type <- deduceOutputType(input.type, region)
     ## Capitalize first letter for dropbox values, convert zip to ZIP, lga to LGA
-    input.type <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", input.type, perl = TRUE)
-    output.type <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", output.type, perl = TRUE)
-    input.type <- sub("\\.", " ", input.type, perl = TRUE)
-    output.type <- sub("\\.", " ", output.type, perl = TRUE)
+    .formatType <- function(type)
+    {
+        if (type == "post.code")
+            return("Postcode")
+        type <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", type, perl = TRUE)
+        type <- sub("\\.", " ", type, perl = TRUE)
+        return(type)
+    }
+    input.type <- .formatType(input.type)
+    output.type <- .formatType(output.type)
     return(c(region, input.type, output.type))
 }
 

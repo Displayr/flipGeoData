@@ -7,7 +7,7 @@ test_that("Region detection works", {
              4498L, 2655L, 11032L, 3058L, 12089L, 7704L, 14047L, 1226L, 11646L,
              15377L, 16276L, 7081L, 15306L, 14633L, 7942L, 14135L)
     text <- australia.post.codes[idx, "suburb"]
-    out <- RecodeGeography(text, output.type = "LGA")
+    out <- RecodeGeography(text, output.type = "Local government area (LGA)")
 
     text <- c("Aylmer South",
               "North Central Island and Bute Inlet Region (Gold River)",

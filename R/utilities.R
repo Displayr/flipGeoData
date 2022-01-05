@@ -227,7 +227,12 @@ disambiguatePlaceInputs <- function(match.idx, text, disambig.text, dat, region,
 
 convertTypeForRegionIfAvailable <- function(type, dat, must.work = TRUE)
 {
-    type <- make.names(tolower(type))
+    if (grepl("^Place", type, ignore.case = TRUE))
+        return("place")
+    if (grepl("lga", type, ignore.case = TRUE))
+        type <- "lga"
+    else
+        type <- make.names(tolower(type))
     TYPES <- c("place|city|town",
                "post.code|zip.code|postcode|postal.code",
                "state",

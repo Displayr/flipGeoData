@@ -219,7 +219,7 @@ test_that("Can find matches in neighbouring regions",
     txt <- c("Castellón", "Staffordshire", "Ourense", "Paredes", "Valongo",
              "Berkshire")
     out <- RecodeGeography(txt, region = "Europe", check.neighboring.region = TRUE)
-    expect_equal(out[c(2, 5)], c("England", "England"))
+    expect_equal(out[c(2, 6)], c("England", "England"))
 
     txt <- c("City Of Gosnells", "Albert-Eden", "Adelaide City Council", "Whau")
     out <- RecodeGeography(txt, region = "New Zealand", input.type = "lga",

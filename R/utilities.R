@@ -204,7 +204,7 @@ disambiguatePlaceInputs <- function(match.idx, text, disambig.text, dat, region,
     ## check if found indexes are possible duplicates
     if (length(text) != length(disambig.text))
         stop("The length of ", sQuote("text.extra"), " must match the length of ",
-             sQuote(text), "(", length(text), ").")
+             sQuote("text"), "(", length(text), ").")
     ## determine input type for disambig.text
     found.place <- !is.na(match.idx)
     disambig.text <- as.character(disambig.text)

@@ -295,4 +295,14 @@ test_that("Can supply extra text to disambiguate places",
     idx <- match(paste0(txt, txt.extra), tbl)
     expected.out <- us.zip.codes[idx, "zip.code"]
     expect_equal(out, as.character(expected.out))
+
+    txt <- c("Brooklyn", "Broolkyn", "Jackson", "Madison", "Madison", "Yellowknife",
+             "Vancouver")
+    state <- c("New York", "New York", "Mississippi", "Wisconsin", "New Jersey",
+               "Northwest Territories", "British Columbia")
+    out <- RecodeGeography(txt, text.extra = state, input.type = "Place",
+                           output.type = "ZIP code", region = "USA", max.levenshtein.dist = 2,
+                           check.neighboring.region = TRUE)
+    expected.out <- c("11201", "11201", "39201", "53701", "7940", "X1A 0A1", "V5K 0A1")
+    expect_equal(out, expected.out)
 })

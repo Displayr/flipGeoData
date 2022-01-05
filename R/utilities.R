@@ -222,8 +222,9 @@ disambiguatePlaceInputs <- function(match.idx, text, disambig.text, dat, region,
             new.match.idx <- chmatch(txt, tbl)
         else
             new.match.idx <- findNearMatches(txt, tbl, max.dist)
-        found.both <- !is.na(new.match.idx)
-        match.idx[to.search.idx[found.both]] <- new.match.idx[found.both]
+        ## found.both <- !is.na(new.match.idx)
+        ## match.idx[which(to.search.idx)[found.both]] <- new.match.idx[found.both]
+        match.idx[which(to.search.idx)] <- new.match.idx
     }
     ## for each potential duplicate, append disambig.text and find match
     return(match.idx)

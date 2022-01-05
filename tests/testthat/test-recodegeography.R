@@ -171,7 +171,7 @@ test_that("Recoding works with non-title case",
     expect_equal(txt.tcase[7], "Staten Island")
     data(us.zip.codes, package = "flipGeoData")
     idx <- match(txt.tcase, us.zip.codes[["place"]])
-    expect.out <- us.zip.codes[["zip.code"]][idx]
+    expect.out <- as.character(us.zip.codes[["zip.code"]][idx])
     expect_equal(out, expect.out)
 })
 

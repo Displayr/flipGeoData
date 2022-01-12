@@ -25,6 +25,8 @@ Zip codes, approximate latitude/longitude, state, and county for 40,970 places i
 \item county - Character; county or census area/2nd order administrative subdivision in the U.S.
 \item latitude - Numeric, approximate latitude for place
 \item longitude - Numeric, approximate longitude for place
+\item duplicate.place - Logical, indicating if \code{place} appears in more
+than one state.
 }
 }
 \keyword{datasets}

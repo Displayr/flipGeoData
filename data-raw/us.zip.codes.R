@@ -97,4 +97,29 @@ us.zip.codes$region <- dplyr::recode(us.zip.codes[["state"]], !!!region)
 us.zip.codes <- us.zip.codes[, c("place", "zip.code", "region", "state",
                                  "county", "latitude", "longitude")]
 
+## add column to indicate if should disambiguate place name by appending state
+## when converting postcodes to place names
+## A place may have multiple entries in the data.frame if
+## it has multiple ZIP codes, but it shouldn't be considered
+## a duplicate if it only occurs in one state.
+place <- us.zip.codes[["place"]]
+state <- us.zip.codes[["state"]]
+## dup.p <- duplicated(place) |
+##     duplicated(place, fromLast = TRUE)
+## p.and.s <- paste(place, us.zip.codes[["state"]], collapse = ", ")
+## potential.dup <- dup.p & !(duplicated(p.and.s) | duplicated(p.and.s, fromLast = TRUE))
+potential.dup <- logical(length(place))
+for (p in unique(place))
+{
+    p.idx <- which(place == p)
+    if (length(p.idx) == 1L || length(unique(state[p.idx])) == 1L)
+        next
+    potential.dup[p.idx] <- TRUE
+}
+us.zip.codes$duplicate.place <- potential.dup
+
 save(us.zip.codes, file = "data/us.zip.codes.rda", compress = TRUE)
+
+## Local Variables:
+## ess-r-package--project-cache: (flipGeoData . "~/flip/flipGeoData/")
+## End:

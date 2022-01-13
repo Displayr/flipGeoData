@@ -128,6 +128,8 @@ RecodeGeography <- function(text,
     }
 
     found <- as.character(found)
+    found[is.na(found)] <- "Other"
+
     return(found)
 }
 

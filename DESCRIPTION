@@ -6,10 +6,12 @@ Maintainer: Displayr <opensource@displayr.com>
 Description: Contains postcodes, approximate latitude and longitude, state, and district information for cities and towns in Canada, the United States, Australia, New Zealand, the United Kingdom, and most European countries.
 Depends: R (>= 3.5.0)
 Imports: data.table,
-    stringdist
+    stringdist,
+    flipU
 Suggests: dplyr,
     FNN,
     testthat
+Remotes: Displayr/flipU
 License: GPL-3
 URL: https://github.com/Displayr/flipGeoData
 Encoding: UTF-8

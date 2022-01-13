@@ -2,5 +2,6 @@
 
 export(RecodeGeography)
 importFrom(data.table,chmatch)
+importFrom(flipU,IsRServer)
 importFrom(stringdist,amatch)
 importFrom(utils,data)

@@ -75,7 +75,7 @@ test_that("Test input type detection with min.matches works",
     text <- c(australia.post.codes[idx[1:3], "post.code"],
               australia.post.codes[idx[4:8], "place"])
     out <- RecodeGeography(text, region = "Australia", output.type = "LGA")
-    expected.out <- c(rep(NA_character_, 3),
+    expected.out <- c(rep("Other", 3),
                       as.character(australia.post.codes[idx[4:8], "lga"]))
     expect_equal(out, expected.out)
 
@@ -83,7 +83,7 @@ test_that("Test input type detection with min.matches works",
     out <- RecodeGeography(text, region = "Australia", output.type = "LGA",
                            min.matches = 3)
     expected.out <- c(as.character(australia.post.codes[idx[1:3], "lga"]),
-                      rep(NA_character_, 5))
+                      rep("Other", 5))
     expect_equal(out, expected.out)
 })
 
@@ -145,7 +145,7 @@ test_that("Approx. matching with levenshtein dist.",
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
                            output.type = "Zip Code",
                            max.levenshtein.dist = 0)
-    expect.out <- rep(NA, length(txt))
+    expect.out <- rep("Other", length(txt))
     expect.out[2] <- as.character(us.zip.codes[idx[2], "zip.code"])
     expect_equal(out, expect.out)
 

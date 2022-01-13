@@ -171,7 +171,8 @@ deduceOutputType <- function(input.type, region)
 #' @importFrom data.table chmatch
 #' @noRd
 findMatches <- function(text, region, input.type, output.type, max.dist = 2,
-                        check.types = FALSE, text.extra = NULL, ...)
+                        check.types = FALSE, text.extra = NULL,
+                        error.if.ambiguous.place = FALSE, ...)
 {
     dat <- loadData(region)
     if (check.types)
@@ -194,9 +195,22 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
             na.idx <- which(is.na(found.idx))
             found.idx[na.idx] <- findNearMatches(text[na.idx], tbl, max.dist, ...)
         }
-        if (input.type == "place" && !is.null(text.extra))
-            found.idx <- disambiguatePlaceInputs(found.idx, text, text.extra,
-                                                 dat, region, max.dist)
+        if (input.type == "place")
+        {
+            if (!is.null(text.extra))
+                found.idx <- disambiguatePlaceInputs(found.idx, text, text.extra,
+                                                     dat, region, max.dist)
+            else if (error.if.ambiguous.place)
+            {
+                found.no.na <- found.idx[!is.na(found.idx)]
+                if (length(found.no.na))
+                {
+                    ambig.idx <- dat[found.no.na, "duplicate.place"]
+                    if (any(ambig.idx))
+                        ambiguousPlaceError(text[ambig.idx])
+                }
+            }
+        }
     }
 
     found <- as.character(dat[found.idx, output.type])
@@ -406,7 +420,7 @@ convertToTitleCaseIfNecessary <- function(txt)
 }
 
 findMatchesInNeighbouringRegion <- function(text, region, input.type,
-                                            output.type, max.dist, ...)
+                                            output.type, max.dist, text.extra = NULL, error.if.ambiguous.place = FALSE, ...)
 {
     neighbor <- switch(region, USA = "Canada", Canada = "USA",
                        Europe = "UK", UK = "Europe", Australia = "New Zealand",
@@ -434,5 +448,28 @@ findMatchesInNeighbouringRegion <- function(text, region, input.type,
     }
 
     ## data(list = data.list[[neighbor]], package = "flipGeoData", envir = environment())
-    return(findMatches(text, neighbor, nbhr.input.type, nbhr.output.type, max.dist, FALSE))
+    return(findMatches(text, neighbor, nbhr.input.type, nbhr.output.type, max.dist, FALSE,
+                       text.extra, error.if.ambiguous.place, ...))
+}
+
+#' @importFrom flipU IsRServer
+#' @noRd
+ambiguousPlaceError <- function (ambig.text)
+{
+    n.ambig <- length(ambig.text)
+    ambig.places <- paste(ambig.text[1:min(n.ambig, 3)],
+                          collapse = ", ")
+    if (n.ambig > 3)
+        ambig.places <- paste0(ambig.places, ", ...")
+    instructions <- ifelse(flipU::IsRServer(),
+                           paste0(sQuote("Extra Geographic Variable"), " dropdown."),
+                           paste0(sQuote("text.extra"), " argument."))
+    msg.start <- ngettext(n.ambig,
+                     paste0("The following place cannot be unambiguously merged ",
+                     "since it matches multiple locations in the region: "),
+                     paste0("The following places cannot be unambiguously merged ",
+                     "since they each match multiple locations in the region: "))
+    stop(msg.start, ambig.places, ". Please supply an additional variable containing ",
+         "state/province/region information to determine the proper ",
+         "conversion via the ", instructions, call. = FALSE)
 }

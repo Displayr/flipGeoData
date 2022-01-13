@@ -110,7 +110,8 @@ RecodeGeography <- function(text,
     output.type <- convertTypeForRegionIfAvailable(output.type, dat)
 
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
-                       check.types = FALSE, text.extra, ...)
+                         check.types = FALSE, text.extra,
+                         error.if.ambiguous.place = TRUE, ...)
     if (FALSE && anyNA(found))
     {
         ## na.idx <- which(is.na(found))
@@ -123,7 +124,8 @@ RecodeGeography <- function(text,
     {
         na.idx <- which(is.na(found))
         found.nhbr <- findMatchesInNeighbouringRegion(text[na.idx], region, input.type,
-                                                      output.type, max.levenshtein.dist, ...)
+                          output.type, max.levenshtein.dist,
+                          text.extra, error.if.ambiguous.place = TRUE, ...)
         found[na.idx] <- found.nhbr
     }
 

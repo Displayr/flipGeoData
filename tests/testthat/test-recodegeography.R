@@ -307,6 +307,24 @@ test_that("Can supply extra text to disambiguate places",
     expect_equal(out, expected.out)
 })
 
+test_that("Error is throw for ambiguous place inputs",
+{
+    expect_error(RecodeGeography(c("Madison", "Jackson"),
+                                 region = "USA", input.type = "Place"),
+                 "The following places cannot be unambiguously merged")
+
+    ## no error when determining region/input.type in QScript
+    expect_error(flipGeoData:::determineGUIControlInput(c("Madison", "Jackson")), NA)
+
+    ## ambiguous place in neighbour only throws error
+    txt <- c("False Pass", "Chipman")
+    expect_error(RecodeGeography(txt,
+                                 region = "USA", input.type = "Place",
+                                 check.neighboring.region = TRUE),
+                 "The following place cannot be unambiguously merged")
+
+})
+
 test_that("Unmatched entries become 'Other'",
 {
     expect_equal(RecodeGeography("JunkNonExistantInput",

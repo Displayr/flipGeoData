@@ -11,6 +11,8 @@
 #' e.g. ward, local board, district or regional council, etc.
 #' \item latitude - Numeric, approximate latitude for place
 #' \item longitude - Numeric, approximate longitude for place
+#' \item duplicate.place - Logical, indicating if \code{place} appears in more
+#' than one region.
 #' }
 #' @name new.zealand.post.codes
 #' @format A data.frame with 1,738 rows and 6 columns.

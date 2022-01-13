@@ -91,4 +91,21 @@ new.zealand.post.codes[["lga"]] <- as.factor(lga.part)
 new.zealand.post.codes <- new.zealand.post.codes[, c("place", "post.code", "region",
                                                      "lga", "latitude", "longitude")]
 
+## Add column to indicate if should disambiguate place name by appending region
+## when converting place names
+## A place may have multiple entries in the data.frame if
+## it has multiple postal codes, but it shouldn't be considered
+## a duplicate if it only occurs in one region.
+place <- new.zealand.post.codes[["place"]]
+region <- new.zealand.post.codes[["region"]]
+potential.dup <- logical(length(place))
+for (p in unique(place))
+{
+    p.idx <- which(place == p)
+    if (length(p.idx) == 1L || length(unique(region[p.idx])) == 1L)
+        next
+    potential.dup[p.idx] <- TRUE
+}
+new.zealand.post.codes$duplicate.place <- potential.dup
+
 save(new.zealand.post.codes, file = "data/new.zealand.post.codes.rda", compress = TRUE)

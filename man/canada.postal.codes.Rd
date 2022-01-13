@@ -25,6 +25,8 @@ or Atlantic.
 \item province - Factor with 13 levels; province or territory/1st order administrative subdivision in Canada
 \item latitude - Numeric, approximate latitude for region/place
 \item longitude - Numeric, approximate longitude for region/place
+\item duplicate.place - Logical, indicating if \code{place} appears in more
+than one province.
 }
 }
 \keyword{datasets}

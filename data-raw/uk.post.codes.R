@@ -75,4 +75,22 @@ uk.post.codes[["region"]] <- as.factor(region)
 
 uk.post.codes <- uk.post.codes[, c("place", "post.code", "country", "region",
                                    "county", "district", "latitude", "longitude")]
+
+## Add column to indicate if should disambiguate place name by appending region
+## when converting place names
+## A place may have multiple entries in the data.frame if
+## it has multiple postal codes, but it shouldn't be considered
+## a duplicate if it only occurs in one region.
+place <- uk.post.codes[["place"]]
+region <- uk.post.codes[["region"]]
+potential.dup <- logical(length(place))
+for (p in unique(place))
+{
+    p.idx <- which(place == p)
+    if (length(p.idx) == 1L || length(unique(region[p.idx])) == 1L)
+        next
+    potential.dup[p.idx] <- TRUE
+}
+uk.post.codes$duplicate.place <- potential.dup
+
 save(uk.post.codes, file = "data/uk.post.codes.rda", compress = TRUE)

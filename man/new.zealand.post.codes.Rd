@@ -26,6 +26,8 @@ for 1,738 places in New Zealand.
 e.g. ward, local board, district or regional council, etc.
 \item latitude - Numeric, approximate latitude for place
 \item longitude - Numeric, approximate longitude for place
+\item duplicate.place - Logical, indicating if \code{place} appears in more
+than one region.
 }
 }
 \keyword{datasets}

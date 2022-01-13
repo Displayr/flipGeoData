@@ -13,6 +13,8 @@
 #' \item district - Character; community/district/3rd order administrative subdivision
 #' \item latitude - Numeric, approximate latitude for region/place
 #' \item longitude - Numeric, approximate longitude for region/place
+#' \item duplicate.place - Logical, indicating if \code{place} appears in more
+#' than one region
 #' }
 #' @name uk.post.codes
 #' @format A data.frame with 1,791,546 rows and 7 columns.

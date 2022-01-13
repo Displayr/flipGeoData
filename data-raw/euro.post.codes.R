@@ -34,5 +34,26 @@ keep.cols <- c("place", "post.code", "state", "province", "community",
                "country.code", "latitude", "longitude")
 euro.post.codes <- euro.post.codes[, keep.cols]
 
+## Add column to indicate if should disambiguate place name by appending state
+## when converting place names
+## A place may have multiple entries in the data.frame if
+## it has multiple postal codes, but it shouldn't be considered
+## a duplicate if it only occurs in one state.
+place <- euro.post.codes[["place"]]
+state <- euro.post.codes[["state"]]
+
+duplicate.place <- logical(length(place))
+possible.dup <- duplicated(place) | duplicated(place, fromLast = TRUE)
+dup.idx <- unlist(lapply(unique(place[possible.dup]),
+              function(p){
+                  p.idx <- which(place == p)
+                  if (length(unique(state[p.idx])) > 1L)
+                      return(p.idx)
+                  else return()
+              }))
+duplicate.place[dup.idx] <- TRUE
+
+euro.post.codes$duplicate.place <- duplciate.place
+
 save(euro.post.codes, file = "data/euro.post.codes.rda", compress = TRUE,
      compression_level = 9)

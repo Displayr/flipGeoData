@@ -21,13 +21,15 @@ Postcodes, approximate latitude/longitude, state, suburb, region, and LGA info f
 \item place - character string place name
 \item post.code - character post code for \code{place}
 \item state - Factor with 8 levels; state/1st order administrative subdivision
+\item region - Factor with 79 levels containing the geographic region within each state for
+\code{place}. N/A for external territories of Australia.
+\item lga - Local government area; third level of government in Australia; e.g. shires,
+cities, town, municipal council, etc.
 \item suburb - Character; suburb/locality/community geographic subdivision; some entries are missing.
 \item latitude - Numeric, approximate latitude for region/place
 \item longitude - Numeric, approximate longitude for region/place
-\item lga - Local government area; third level of government in Australia; e.g. shires,
-cities, town, municipal council, etc.
-\item region - Factor with 79 levels containing the geographic region within each state for
-\code{place}. N/A for external territories of Australia .
+\item duplicate.place - Logical, indicating if \code{place} appears in more
+than one state.
 }
 }
 \keyword{datasets}

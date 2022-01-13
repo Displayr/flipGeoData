@@ -26,6 +26,8 @@ Postcodes, approximate latitude/longitude, and state/province info for cities an
 \item country.code - Factor with 42 levels; two-character country code for the country in ISO-3166 format.
 \item latitude - Numeric, approximate latitude for region/place
 \item longitude - Numeric, approximate longitude for region/place
+\item duplicate.place - Logical, indicating if \code{place} appears in more
+than one state
 }
 }
 \keyword{datasets}

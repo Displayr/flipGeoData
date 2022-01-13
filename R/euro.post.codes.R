@@ -12,6 +12,8 @@
 #' \item country.code - Factor with 42 levels; two-character country code for the country in ISO-3166 format.
 #' \item latitude - Numeric, approximate latitude for region/place
 #' \item longitude - Numeric, approximate longitude for region/place
+#' \item duplicate.place - Logical, indicating if \code{place} appears in more
+#' than one state
 #' }
 #' @name euro.post.codes
 #' @format A data.frame with 719,147 rows and 8 columns.

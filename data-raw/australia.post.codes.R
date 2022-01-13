@@ -191,5 +191,22 @@ australia.post.codes[["region"]][missing.idx] <- NA
 act.idx <- australia.post.codes[["state"]] %in% "Australian Capital Territory"
 australia.post.codes[["region"]][act.idx] <- "Australian Capital Territory"
 australia.post.codes[["region"]] <- as.factor(australia.post.codes[["region"]])
-## australia.post.codes <- australia.post.codes[, c()]
+
+## Add column to indicate if should disambiguate place name by appending state
+## when converting place names
+## A place may have multiple entries in the data.frame if
+## it has multiple postal codes, but it shouldn't be considered
+## a duplicate if it only occurs in one state.
+place <- australia.post.codes[["place"]]
+state <- australia.post.codes[["state"]]
+potential.dup <- logical(length(place))
+for (p in unique(place))
+{
+    p.idx <- which(place == p)
+    if (length(p.idx) == 1L || length(unique(state[p.idx])) == 1L)
+        next
+    potential.dup[p.idx] <- TRUE
+}
+australia.post.codes$duplicate.place <- potential.dup
+
 save(australia.post.codes, file = "data/australia.post.codes.rda", compress = TRUE)

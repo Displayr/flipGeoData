@@ -120,7 +120,7 @@ detectInputType <- function(text, region, min.matches = 1)
     min.matches <- min(n, min.matches)
     dat <- loadData(region)
     cols.to.check <- colnames(dat)
-    keep.col <- !cols.to.check %in% c('latitude', 'longitude')
+    keep.col <- !cols.to.check %in% c("latitude", "longitude", "duplicate.place")
     cols.to.check <- cols.to.check[keep.col]
     ## check factors first since want to match e.g. state/province first
     col.classes <- vapply(dat, class, "")[keep.col]
@@ -263,7 +263,7 @@ convertTypeForRegionIfAvailable <- function(type, dat, must.work = TRUE)
         if (!must.work)
             return(NA)
         available.names <- paste0(col.names[!col.names %in% c('latitude',
-                                                       'longitude', "country.code")],
+                                                       'longitude', "country.code", "duplicate.place")],
                                   collapse = ", ")
         stop("The requested type for this region must be one of: ", available.names,
              ".", call. = TRUE)

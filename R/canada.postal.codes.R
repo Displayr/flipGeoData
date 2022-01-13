@@ -10,6 +10,8 @@
 #' \item province - Factor with 13 levels; province or territory/1st order administrative subdivision in Canada
 #' \item latitude - Numeric, approximate latitude for region/place
 #' \item longitude - Numeric, approximate longitude for region/place
+#' \item duplicate.place - Logical, indicating if \code{place} appears in more
+#' than one province.
 #' }
 #' @name canada.postal.codes
 #' @format A data.frame with 892,800 rows and 6 columns.

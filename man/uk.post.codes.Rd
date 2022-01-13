@@ -28,6 +28,8 @@ to \code{country} if \code{place} is outside England.
 \item district - Character; community/district/3rd order administrative subdivision
 \item latitude - Numeric, approximate latitude for region/place
 \item longitude - Numeric, approximate longitude for region/place
+\item duplicate.place - Logical, indicating if \code{place} appears in more
+than one region
 }
 }
 \keyword{datasets}

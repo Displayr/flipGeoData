@@ -189,20 +189,26 @@ test_that("Autodetection with non-title case",
 test_that("Can find matches in neighbouring regions",
 {
     txt <- c("Vancouver", "Winnipeg", "New York", "Washington", "Toronto")
+    txt.extra <- c("West", "Prairies", "Northeast", "West", "Central")
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Postcode")
+                           output.type = "Postcode", text.extra = txt.extra)
     data(us.zip.codes, package = "flipGeoData")
-    idx <- match(txt, us.zip.codes[["place"]])
+    txt.both <- paste0(txt, txt.extra)
+    idx <- match(txt.both, paste0(us.zip.codes[["place"]],
+                                  us.zip.codes[["region"]]))
+
     expected.out <- as.character(us.zip.codes[idx, "zip.code"])
+    expected.out[is.na(expected.out)] <- "Other"
     expect_equal(out, expected.out)
 
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Postcode", check.neighboring.region = TRUE)
-    txt.na <- txt[is.na(expected.out)]
+                           output.type = "Postcode", check.neighboring.region = TRUE,
+                           text.extra = txt.extra)
+    txt.unmatched <- txt[expected.out == "Other"]
     data(canada.postal.codes, package = "flipGeoData")
-    out.na <- canada.postal.codes[match(txt.na, canada.postal.codes[["place"]]),
+    out.can <- canada.postal.codes[match(txt.unmatched, canada.postal.codes[["place"]]),
                                   "postal.code"]
-    expected.out[is.na(expected.out)] <- out.na
+    expected.out[expected.out == "Other"] <- out.can
     expect_equal(out, expected.out)
 
     out <- RecodeGeography(txt, region = "Canada", input.type = "Place",
@@ -296,6 +302,7 @@ for (region in names(avail.types))
                                                 )[1], 1L)
                             }
             expected.out <- as.character(dat[match.idx, cname.out])
+            expected.out[is.na(expected.out)] <- "Other"
             desc <- paste0("Recode ", input.type, " to ", output.type, " for ", region)
             test_that(desc,
                       expect_equal(RecodeGeography(txt.in, region = region,

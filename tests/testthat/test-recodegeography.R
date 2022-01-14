@@ -166,7 +166,8 @@ test_that("Recoding works with non-title case",
 {
     txt <- c("BROOKLYN", "BRONX", "BROOKLYN", "Flushing", "BROOKLYN",
              "NEW YORK", "STATEN ISLAND", "BROOKLYN", "BROOKLYN")
-    out <- RecodeGeography(txt, input.type = "Place")
+    txt.extra <- rep("NEW YORK", length(txt))
+    out <- RecodeGeography(txt, input.type = "Place", text.extra = txt.extra)
     txt.tcase <- flipGeoData:::convertToTitleCaseIfNecessary(txt)
     expect_equal(txt.tcase[7], "Staten Island")
     data(us.zip.codes, package = "flipGeoData")
@@ -259,15 +260,22 @@ in.idx <- c(50L, 101L, 256L, 575L, 1010L)
 for (region in names(available.types))
 {
     dat <- flipGeoData:::loadData(region)
+    admin1.name <- if ("state" %in% colnames(dat)) {
+                       "state"
+                   }else if ("province" %in% colnames(dat)) {
+                       "province"
+                   }else "region"
     types <- avail.types[[region]]
     types <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", types, perl = TRUE)
     types <- sub("\\.", " ", types, perl = TRUE)
     for (input.type in types)
     {
         cname.in <- make.names(tolower(input.type))
-        otypes <- types[match(input.type, types):length(types)]
+        otypes <- types[(match(input.type, types)+1):length(types)]
         if (grepl("^ZIP|^Post", input.type))
             otypes <- c("Place", otypes)
+        txt.extra <- if (input.type == "Place")
+                         dat[in.idx, admin1.name]
         for (output.type in otypes)
         {
             cname.out <- make.names(tolower(output.type))
@@ -277,7 +285,7 @@ for (region in names(available.types))
             desc <- paste0("Recode ", input.type, " to ", output.type, " for ", region)
             test_that(desc,
                       expect_equal(RecodeGeography(txt.in, region = region,
-                                                   input.type = input.type, output.type = output.type),
+                                                   input.type = input.type, output.type = output.type, text.extra = txt.extra),
                                    expected.out))
         }
     }

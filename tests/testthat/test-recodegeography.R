@@ -171,8 +171,10 @@ test_that("Recoding works with non-title case",
     txt.tcase <- flipGeoData:::convertToTitleCaseIfNecessary(txt)
     expect_equal(txt.tcase[7], "Staten Island")
     data(us.zip.codes, package = "flipGeoData")
-    idx <- match(txt.tcase, us.zip.codes[["place"]])
-    expect.out <- as.character(us.zip.codes[["zip.code"]][idx])
+    ny.idx <- us.zip.codes[["state"]] == "New York"
+    ny <- us.zip.codes[ny.idx, ]
+    idx <- match(txt.tcase, ny[["place"]])
+    expect.out <- as.character(ny[["zip.code"]][idx])
     expect_equal(out, expect.out)
 })
 
@@ -302,6 +304,7 @@ test_that("Can supply extra text to disambiguate places",
     tbl <- paste0(us.zip.codes[["place"]], us.zip.codes[["state"]])
     idx <- match(paste0(txt, txt.extra), tbl)
     expected.out <- us.zip.codes[idx, "zip.code"]
+    expected.out[is.na(expected.out)] <- "Other"
     expect_equal(out, as.character(expected.out))
 
     txt <- c("Brooklyn", "Broolkyn", "Jackson", "Madison", "Madison", "Yellowknife",
@@ -315,7 +318,7 @@ test_that("Can supply extra text to disambiguate places",
     expect_equal(out, expected.out)
 })
 
-test_that("Error is throw for ambiguous place inputs",
+test_that("Error is thrown for ambiguous place inputs",
 {
     expect_error(RecodeGeography(c("Madison", "Jackson"),
                                  region = "USA", input.type = "Place"),

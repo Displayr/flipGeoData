@@ -257,9 +257,9 @@ test_that("Can find matches in neighbouring regions",
 ## Test each input type and output type for each region
 avail.types <- flipGeoData:::available.types
 avail.types <- lapply(avail.types, function(types)
-    types[!types %in% c("latitude", "longitude")])
+    types[!types %in% c("latitude", "longitude", "duplicate.place")])
 in.idx <- c(50L, 101L, 256L, 575L, 1010L)
-for (region in names(available.types))
+for (region in names(avail.types))
 {
     dat <- flipGeoData:::loadData(region)
     admin1.name <- if ("state" %in% colnames(dat)) {
@@ -268,21 +268,33 @@ for (region in names(available.types))
                        "province"
                    }else "region"
     types <- avail.types[[region]]
+    n.types <- length(types)
     types <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", types, perl = TRUE)
     types <- sub("\\.", " ", types, perl = TRUE)
-    for (input.type in types)
+    ## reorder types so that for each idx, j, it makes sense
+    ## to convert to j+1,j+2,...,length(types) column of dat
+    types <- c(types[2:1], rev(types[3:length(types)]))
+    for (i in seq_len(n.types-1))
     {
+        input.type <- types[i]
+        output.types <- types[(i+1):n.types]
         cname.in <- make.names(tolower(input.type))
-        otypes <- types[(match(input.type, types)+1):length(types)]
-        if (grepl("^ZIP|^Post", input.type))
-            otypes <- c("Place", otypes)
         txt.extra <- if (input.type == "Place")
                          dat[in.idx, admin1.name]
-        for (output.type in otypes)
+        for (output.type in output.types)
         {
             cname.out <- make.names(tolower(output.type))
             txt.in <- dat[in.idx, cname.in]
-            match.idx <- match(txt.in, dat[[cname.in]])
+            match.idx <- if (input.type != "Place"){
+                                match(txt.in, dat[[cname.in]])
+                            }else{
+                                vapply(seq_along(txt.in),
+                                       function(i)
+                                           which(
+                                               dat[["place"]] %in% txt.in[i] &
+                                               dat[[admin1.name]] %in% txt.extra[i]
+                                                )[1], 1L)
+                            }
             expected.out <- as.character(dat[match.idx, cname.out])
             desc <- paste0("Recode ", input.type, " to ", output.type, " for ", region)
             test_that(desc,
@@ -310,7 +322,7 @@ test_that("Can supply extra text to disambiguate places",
     txt <- c("Brooklyn", "Broolkyn", "Jackson", "Madison", "Madison", "Yellowknife",
              "Vancouver")
     state <- c("New York", "New York", "Mississippi", "Wisconsin", "New Jersey",
-               "Northwest Territories", "British Columbia")
+               "Northwest Territory", "British Columbia")
     out <- RecodeGeography(txt, text.extra = state, input.type = "Place",
                            output.type = "ZIP code", region = "USA", max.levenshtein.dist = 2,
                            check.neighboring.region = TRUE)

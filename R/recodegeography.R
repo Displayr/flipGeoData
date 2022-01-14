@@ -83,7 +83,11 @@ RecodeGeography <- function(text,
 {
     text <- convertToTitleCaseIfNecessary(text)
     if (!is.null(text.extra))
+    {
         text.extra <- convertToTitleCaseIfNecessary(text.extra)
+        if (is.factor(text))
+            text.extra <- as.character(text.extra)
+    }
     if (is.factor(text))
         text <- as.character(text)
     if (is.numeric(text))

@@ -215,14 +215,18 @@ test_that("Can find matches in neighbouring regions",
                            output.type = "Postcode", check.neighboring.region = FALSE)
     idx <- match(txt, canada.postal.codes[["place"]])
     expected.out <- canada.postal.codes[idx, "postal.code"]
+    expected.out[is.na(expected.out)] <- "Other"
     expect_equal(out, expected.out)
 
     out <- RecodeGeography(txt, region = "Canada", input.type = "Place",
-                           output.type = "Postcode", check.neighboring.region = TRUE)
-    txt.na <- txt[is.na(expected.out)]
-    out.na <- us.zip.codes[match(txt.na, us.zip.codes[["place"]]),
+                           output.type = "Postcode", check.neighboring.region = TRUE,
+                           text.extra = txt.extra)
+    unmatched <- which(expected.out == "Other")
+    txt.unmatched <- paste0(txt[unmatched], txt.extra[unmatched])
+    out.na <- us.zip.codes[match(txt.unmatched,
+                                 paste0(us.zip.codes[["place"]], us.zip.codes[["region"]])),
                                   "zip.code"]
-    expected.out[is.na(expected.out)] <- out.na
+    expected.out[expected.out == "Other"] <- out.na
     expect_equal(out, expected.out)
 
     txt <- c("Castell\u00F3n", "Staffordshire", "Ourense", "Paredes", "Valongo",

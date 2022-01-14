@@ -127,7 +127,7 @@ RecodeGeography <- function(text,
         na.idx <- which(is.na(found))
         found.nhbr <- findMatchesInNeighbouringRegion(text[na.idx], region, input.type,
                           output.type, max.levenshtein.dist,
-                          text.extra, error.if.ambiguous.place = TRUE, ...)
+                          text.extra[na.idx], error.if.ambiguous.place = TRUE, ...)
         found[na.idx] <- found.nhbr
     }
 

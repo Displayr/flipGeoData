@@ -202,13 +202,9 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
                                                      dat, region, max.dist)
             else if (error.if.ambiguous.place)
             {
-                found.no.na <- found.idx[!is.na(found.idx)]
-                if (length(found.no.na))
-                {
-                    ambig.idx <- dat[found.no.na, "duplicate.place"]
-                    if (any(ambig.idx))
-                        ambiguousPlaceError(text[ambig.idx])
-                }
+                ambig.idx <- dat[found.idx, "duplicate.place"]
+                if (any(ambig.idx, na.rm = TRUE))
+                    ambiguousPlaceError(text[ambig.idx])
             }
         }
     }
@@ -456,6 +452,7 @@ findMatchesInNeighbouringRegion <- function(text, region, input.type,
 #' @noRd
 ambiguousPlaceError <- function (ambig.text)
 {
+    ambig.text <- unique(ambig.text[!is.na(ambig.text)])
     n.ambig <- length(ambig.text)
     ambig.places <- paste(ambig.text[1:min(n.ambig, 3)],
                           collapse = ", ")

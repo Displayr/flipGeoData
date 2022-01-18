@@ -365,3 +365,14 @@ test_that("Unmatched entries become 'Other'",
                                  region = "USA", input.type = "Place",
                                  check.neighboring.region = TRUE), "Other")
 })
+
+test_that("Synonyms for state/provinces recognized",
+{
+    txt <- c("Texas", "MD", "Wash.", "D.C.")
+    out <- RecodeGeography(txt, region = "USA", input.type = "state")
+    expect_equal(out, c("South", "South", "West", "South"))
+
+    out <- RecodeGeography(c("Tameside", "Bexley"), region = "UK", input.type = "County",
+                           output.type = "Region")
+    expect_equal(out, c("North West", "London"))
+})

@@ -115,6 +115,9 @@ RecodeGeography <- function(text,
         errorIfInvalidTypes(input.type, output.type)
     output.type <- convertTypeForRegionIfAvailable(output.type, dat)
 
+    if (admin1Type(input.type, region))
+        text <- replaceAdmin1Synonyms(text, region, input.type)
+
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
                          check.types = FALSE, text.extra,
                          error.if.ambiguous.place = TRUE, ...)

@@ -334,7 +334,7 @@ determineGUIControlInput <- function(text, min.matches = 5)
 admin1Type <- function(type, region)
 {
     out <- FALSE
-    if (type == c("state", "province") || (region == "UK" && type == "county") ||
+    if (type %in% c("state", "province") || (region == "UK" && type == "county") ||
         (region == "New Zealand" && type == "region"))
         out <- TRUE
     return(out)

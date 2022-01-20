@@ -256,9 +256,6 @@ for (region in names(avail.types))
     n.types <- length(types)
     types <- sub("^([A-z](?:ip|ga)?)", "\\U\\1", types, perl = TRUE)
     types <- sub("\\.", " ", types, perl = TRUE)
-    ## reorder types so that for each idx, j, it makes sense
-    ## to convert to j+1,j+2,...,length(types) column of dat
-    types <- c(types[2:1], rev(types[3:length(types)]))
     for (i in seq_len(n.types-1))
     {
         input.type <- types[i]

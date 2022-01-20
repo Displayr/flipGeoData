@@ -4,7 +4,7 @@ data.list <- c(USA = "us.zip.codes",
                UK = "uk.post.codes",
                Australia = "australia.post.codes",
                `New Zealand` = "new.zealand.post.codes")
-available.types = list(USA = c("zip.code", "place", "place", "state", "region"),
+available.types = list(USA = c("zip.code", "place", "county", "state", "region"),
                        Canada = c("postal.code", "place", "province", "region"),
                        Europe = c("post.code", "place", "community", "province",
                                   "state", "country.code"),
@@ -469,6 +469,7 @@ errorIfInvalidMergeRequested <- function(dat, input.type, output.type)
     if (in.pos > out.pos)
         stop("It is not possible to merge from ", sQuote(input.type), " to ",
              sQuote(output.type), " for this region. Please specify an output type ",
-             "that is a larger geographic unit than the input type.")
+             "that is a larger geographic unit than the input type.",
+             call. = FALSE)
     return(invisible())
 }

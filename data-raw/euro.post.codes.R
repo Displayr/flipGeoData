@@ -30,7 +30,7 @@ euro.post.codes[["country.code"]] <- as.factor(euro.post.codes[["country.code"]]
 euro.post.codes[["state"]] <- as.factor(euro.post.codes[["state"]])
 euro.post.codes[["province"]] <- as.factor(euro.post.codes[["province"]])
 
-keep.cols <- c("place", "post.code", "state", "province", "community",
+keep.cols <- c("post.code", "place", "community", "province", "state",
                "country.code", "latitude", "longitude")
 euro.post.codes <- euro.post.codes[, keep.cols]
 
@@ -52,8 +52,7 @@ dup.idx <- unlist(lapply(unique(place[possible.dup]),
                   else return()
               }))
 duplicate.place[dup.idx] <- TRUE
-
-euro.post.codes$duplicate.place <- duplciate.place
+euro.post.codes$duplicate.place <- duplicate.place
 
 save(euro.post.codes, file = "data/euro.post.codes.rda", compress = TRUE,
      compression_level = 9)

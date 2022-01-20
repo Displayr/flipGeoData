@@ -150,19 +150,20 @@ deduceOutputType <- function(input.type, region)
 {
     candidates <- available.types[[region]]
     if (input.type == "place")
-        return(grep("^zip|^post", candidates, value = TRUE))
+        return(switch(region, Canada = "province", "New Zealand" = "region",
+                      UK = "region", "state"))
     if (grepl("^zip|^post", input.type))
         return("place")
 
-    if (input.type == "state" && region == "Europe")
-        return("country.code")
-
     ## columns of data frames are always arranged from
-    ## largest subregion type to smallest, so pick the previous
+    ## smallest subregion type to largest, so pick the next
     ## column from the input column position, to e.g. select
     ## output state for county input.type
-    input.idx <- grep(input.type, candidates, fixed = TRUE)
-    return(candidates[input.idx-1])
+    input.idx <- match(input.type, candidates)
+    if (input.idx == length(available.types))
+        stop("Sorry, it is not possible to merge data of input type ", sQuote(input.type),
+             " for this region since there is no larger geographic unit available.")
+    return(candidates[input.idx+1])
 }
 
 #' @importFrom data.table chmatch
@@ -449,4 +450,25 @@ replaceAdmin1Synonyms <- function(text, region, input.type)
     no.synonym <- is.na(found.idx)
     out.txt[no.synonym] <- text[no.synonym]
     return(out.txt)
+}
+
+#' check it is possible to convert input.type to output.type
+#' input.type must be smaller geographic unit than output.type
+#' @noRd
+errorIfInvalidMergeRequested <- function(dat, input.type, output.type)
+{
+    n.col <- ncol(dat)
+    ## last three columns are always latitude, longitude, duplicate.place
+    cnames <- colnames(dat)[1:(n.col-3)]
+    in.pos <- match(input.type, cnames)
+    out.pos <- match(output.type, cnames)
+    ## columns of dat are always ordered from smallest geographic unit to largest
+    if (in.pos == n.col - 3)
+        stop("Sorry, it is not possible to merge data of input type ", sQuote(input.type),
+             " for this region since there is no larger geographic unit available.")
+    if (in.pos > out.pos)
+        stop("It is not possible to merge from ", sQuote(input.type), " to ",
+             sQuote(output.type), " for this region. Please specify an output type ",
+             "that is a larger geographic unit than the input type.")
+    return(invisible())
 }

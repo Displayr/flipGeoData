@@ -111,9 +111,12 @@ RecodeGeography <- function(text,
     input.type <- convertTypeForRegionIfAvailable(input.type, dat)
     if (is.null(output.type))
         output.type <- deduceOutputType(input.type, region)
-    if (FALSE)  ## check it is possible to convert input.type to output.type
-        errorIfInvalidTypes(input.type, output.type)
+
+
     output.type <- convertTypeForRegionIfAvailable(output.type, dat)
+    ## check it is possible to convert input.type to output.type
+    ## input.type must be smaller geographic unit than output.type
+    errorIfInvalidMergeRequested(dat, input.type, output.type)
 
     if (admin1Type(input.type, region))
         text <- replaceAdmin1Synonyms(text, region, input.type)
@@ -121,14 +124,7 @@ RecodeGeography <- function(text,
     found <- findMatches(text, region, input.type, output.type, max.levenshtein.dist,
                          check.types = FALSE, text.extra,
                          error.if.ambiguous.place = TRUE, ...)
-    if (FALSE && anyNA(found))
-    {
-        ## na.idx <- which(is.na(found))
-        ## mapped.synonyms <- findSynonyms(text[na.idx], region, input.type)
-        ## found.syn <- findMatches(mapped.synonyms, region, input.type, output.type,
-        ##                          max.dist = 0)
-        ## found[na.idx] <- found.syn
-    }
+
     if (check.neighboring.region && anyNA(found))
     {
         na.idx <- which(is.na(found))

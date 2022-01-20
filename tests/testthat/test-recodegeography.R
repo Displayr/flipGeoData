@@ -26,7 +26,7 @@ test_that("Region detection works", {
               "Peterborough North", "Debec",
               "Prince Albert Central", "Petawawa")
     out <- flipGeoData:::determineGUIControlInput(text)
-    expect_equal(out, c("Canada", "Place", "Postal code"))
+    expect_equal(out, c("Canada", "Place", "Province"))
 
     idx <- c(328229L, 547317L, 430800L, 62274L, 313481L, 647785L, 56543L,
              379100L, 351949L, 660222L, 330722L, 575803L, 475463L, 355318L,
@@ -143,22 +143,22 @@ test_that("Approx. matching with levenshtein dist.",
     txt[3] <- "Saint Georg Island"
     txt[4] <- "St. Paul Island"
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Zip Code",
+                           output.type = "State",
                            max.levenshtein.dist = 0)
     expect.out <- rep("Other", length(txt))
-    expect.out[2] <- as.character(us.zip.codes[idx[2], "zip.code"])
+    expect.out[2] <- as.character(us.zip.codes[idx[2], "state"])
     expect_equal(out, expect.out)
 
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Zip Code",
+                           output.type = "County",
                            max.levenshtein.dist = 1)
-    expect.out[1:3] <- as.character(us.zip.codes[idx[1:3], "zip.code"])
+    expect.out[1:3] <- as.character(us.zip.codes[idx[1:3], "county"])
     expect_equal(out, expect.out)
 
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Zip Code",
+                           output.type = "State",
                            max.levenshtein.dist = 4)
-    expect.out[4] <- as.character(us.zip.codes[idx[4], "zip.code"])
+    expect.out[4] <- as.character(us.zip.codes[idx[4], "state"])
     expect_equal(out, expect.out)
 })
 
@@ -167,14 +167,15 @@ test_that("Recoding works with non-title case",
     txt <- c("BROOKLYN", "BRONX", "BROOKLYN", "Flushing", "BROOKLYN",
              "NEW YORK", "STATEN ISLAND", "BROOKLYN", "BROOKLYN")
     txt.extra <- rep("NEW YORK", length(txt))
-    out <- RecodeGeography(txt, input.type = "Place", text.extra = txt.extra)
+    out <- RecodeGeography(txt, input.type = "Place", text.extra = txt.extra,
+                           output.type = "County")
     txt.tcase <- flipGeoData:::convertToTitleCaseIfNecessary(txt)
     expect_equal(txt.tcase[7], "Staten Island")
     data(us.zip.codes, package = "flipGeoData")
     ny.idx <- us.zip.codes[["state"]] == "New York"
     ny <- us.zip.codes[ny.idx, ]
     idx <- match(txt.tcase, ny[["place"]])
-    expect.out <- as.character(ny[["zip.code"]][idx])
+    expect.out <- as.character(ny[["county"]][idx])
     expect_equal(out, expect.out)
 })
 
@@ -183,7 +184,7 @@ test_that("Autodetection with non-title case",
     txt <- c("OTISVILLE","LAKE DELTON","CORAOPOLIS","MACON","JANESVILLE",
              "CAPE CORAL","TAMPA","GILL","WOODWARD","ORLANDO")
     expect_equal(flipGeoData:::determineGUIControlInput(txt),
-                 c("USA", "Place", "ZIP code"))
+                 c("USA", "Place", "State"))
 })
 
 test_that("Can find matches in neighbouring regions",
@@ -191,41 +192,41 @@ test_that("Can find matches in neighbouring regions",
     txt <- c("Vancouver", "Winnipeg", "New York", "Washington", "Toronto")
     txt.extra <- c("West", "Prairies", "Northeast", "West", "Central")
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Postcode", text.extra = txt.extra)
+                           output.type = "State", text.extra = txt.extra)
     data(us.zip.codes, package = "flipGeoData")
     txt.both <- paste0(txt, txt.extra)
     idx <- match(txt.both, paste0(us.zip.codes[["place"]],
                                   us.zip.codes[["region"]]))
 
-    expected.out <- as.character(us.zip.codes[idx, "zip.code"])
+    expected.out <- as.character(us.zip.codes[idx, "state"])
     expected.out[is.na(expected.out)] <- "Other"
     expect_equal(out, expected.out)
 
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
-                           output.type = "Postcode", check.neighboring.region = TRUE,
+                           output.type = "State", check.neighboring.region = TRUE,
                            text.extra = txt.extra)
     txt.unmatched <- txt[expected.out == "Other"]
     data(canada.postal.codes, package = "flipGeoData")
-    out.can <- canada.postal.codes[match(txt.unmatched, canada.postal.codes[["place"]]),
-                                  "postal.code"]
+    out.can <- as.character(canada.postal.codes[match(txt.unmatched,
+                                                      canada.postal.codes[["place"]]), "province"])
     expected.out[expected.out == "Other"] <- out.can
     expect_equal(out, expected.out)
 
     out <- RecodeGeography(txt, region = "Canada", input.type = "Place",
-                           output.type = "Postcode", check.neighboring.region = FALSE)
+                           output.type = "Province", check.neighboring.region = FALSE)
     idx <- match(txt, canada.postal.codes[["place"]])
-    expected.out <- canada.postal.codes[idx, "postal.code"]
+    expected.out <- as.character(canada.postal.codes[idx, "province"])
     expected.out[is.na(expected.out)] <- "Other"
     expect_equal(out, expected.out)
 
     out <- RecodeGeography(txt, region = "Canada", input.type = "Place",
-                           output.type = "Postcode", check.neighboring.region = TRUE,
+                           output.type = "Province", check.neighboring.region = TRUE,
                            text.extra = txt.extra)
     unmatched <- which(expected.out == "Other")
     txt.unmatched <- paste0(txt[unmatched], txt.extra[unmatched])
-    out.na <- us.zip.codes[match(txt.unmatched,
+    out.na <- as.character(us.zip.codes[match(txt.unmatched,
                                  paste0(us.zip.codes[["place"]], us.zip.codes[["region"]])),
-                                  "zip.code"]
+                                  "state"])
     expected.out[expected.out == "Other"] <- out.na
     expect_equal(out, expected.out)
 
@@ -240,34 +241,8 @@ test_that("Can find matches in neighbouring regions",
     expect_equal(out, c("Western Australia", "Auckland", "South Australia", "Auckland"))
 })
 
-## test_that("Recode geography finds state synonyms",
-## {
-##     txt <- c("MB", NA, "Alberta", "Newfoundland", "Québec")
-##     expected.out <- rep(NA_character_, length(txt))
-##     expected.out[3] <- "Prairies"
-##     out <- RecodeGeography(txt, region = "Canada", input.type = "province",
-##                            check.synonyms = FALSE)
-##     expect_equal(as.character(out), expected.out)
-##     expected.out <- c("Prairies", NA, "Prairies", "Atlantic", "Central")
-##     out <- RecodeGeography(txt, region = "Canada", input.type = "province",
-##                            check.synonyms = TRUE)
-##     expect_equal(as.character(out), expected.out)
-
-##     txt <- c("Nevada", "Nev.", "NV")
-##     txt[2:3] <- flipGeoData:::findSynonymsFromList(txt[2:3], "USA")
-##     expect_equal(txt, rep("Nevada", length(txt)))
-
-##     txt <- c("Borough of Wolverhampton", "Leicester City", "Wakefield")
-##     expected.out <- c("Wolverhampton")
-##     out <- RecodeGeography(txt, region = "UK", input.type = "county",
-##                            output.type = "district",
-##                            check.synonyms = TRUE)
-## })
-
 ## Test each input type and output type for each region
 avail.types <- flipGeoData:::available.types
-avail.types <- lapply(avail.types, function(types)
-    types[!types %in% c("latitude", "longitude", "duplicate.place")])
 in.idx <- c(50L, 101L, 256L, 575L, 1010L)
 for (region in names(avail.types))
 {
@@ -375,4 +350,16 @@ test_that("Synonyms for state/provinces recognized",
     out <- RecodeGeography(c("Tameside", "Bexley"), region = "UK", input.type = "County",
                            output.type = "Region")
     expect_equal(out, c("North West", "London"))
+})
+
+test_that("Error if request merge from larger geographic unit to smaller",
+{
+    expect_error(RecodeGeography("Toronto", region = "Canada", input.type = "Place",
+                                 output.type = "Postal code"),
+                 "It is not possible to merge")
+
+    expect_error(RecodeGeography("Auckland", region = "New Zealand",
+                                 input.type = "Region",
+                                 output.type = "LGA"),
+                 "no larger geographic unit available.")
 })

@@ -4,18 +4,15 @@ data.list <- c(USA = "us.zip.codes",
                UK = "uk.post.codes",
                Australia = "australia.post.codes",
                `New Zealand` = "new.zealand.post.codes")
-available.types = list(USA = c("place", "zip.code", "region", "state", "county",
-                               "latitude", "longitude"),
-                       Canada = c("place", "postal.code", "region", "province",
-                                  "latitude", "longitude"),
-                       Europe = c("place", "post.code", "state", "province",
-                                  "community", "country.code", "latitude", "longitude"),
-                       UK = c("place", "post.code", "country", "region", "county", "district",
-                              "latitude", "longitude"),
-                       Australia = c("place", "post.code", "state", "suburb",
-                                     "lga", "region", "latitude", "longitude"),
-                       `New Zealand` = c("place", "post.code", "region", "lga",
-                                         "latitude", "longitude"))
+available.types = list(USA = c("zip.code", "place", "place", "state", "region"),
+                       Canada = c("postal.code", "place", "province", "region"),
+                       Europe = c("post.code", "place", "community", "province",
+                                  "state", "country.code"),
+                       UK = c("post.code", "place", "district", "county",
+                              "region", "country"),
+                       Australia = c("post.code", "place", "suburb", "lga",
+                                     "region", "state"),
+                       `New Zealand` = c("post.code", "place", "lga", "region"))
 utils::globalVariables(c("data.list", "available.types"))
 
 #' Given a vector of text containing geographic

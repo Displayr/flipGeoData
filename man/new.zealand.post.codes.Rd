@@ -19,11 +19,11 @@ for 1,738 places in New Zealand.
 }
 \details{
 \itemize{
-\item place - character string place name
 \item post.code - integer with 3-4 digits providing the full postcode for \code{place}
-\item region - Factor with 16 levels; region of New Zealand.
+\item place - character string place name
 \item lga - Factor with 132 levels; local government adminstrative area for place;
 e.g. ward, local board, district or regional council, etc.
+\item region - Factor with 16 levels; region of New Zealand.
 \item latitude - Numeric, approximate latitude for place
 \item longitude - Numeric, approximate longitude for place
 \item duplicate.place - Logical, indicating if \code{place} appears in more

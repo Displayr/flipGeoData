@@ -3,11 +3,11 @@
 #' Postal codes, approximate latitude/longitude, and province for 892,800 places in Canada
 #'
 #' \itemize{
-#' \item place - character string place name
 #' \item postal.code - string with seven characters providing the full postal code for \code{place}
+#' \item place - character string place name
+#' \item province - Factor with 13 levels; province or territory/1st order administrative subdivision in Canada
 #' \item region - Factor with 5 levels; region of Canada: West, Prairies, North, Central,
 #' or Atlantic.
-#' \item province - Factor with 13 levels; province or territory/1st order administrative subdivision in Canada
 #' \item latitude - Numeric, approximate latitude for region/place
 #' \item longitude - Numeric, approximate longitude for region/place
 #' \item duplicate.place - Logical, indicating if \code{place} appears in more

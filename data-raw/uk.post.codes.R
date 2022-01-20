@@ -73,8 +73,8 @@ region <- dplyr::recode(county, !!!region.map)
 region[missing.idx] <- mregions
 uk.post.codes[["region"]] <- as.factor(region)
 
-uk.post.codes <- uk.post.codes[, c("place", "post.code", "country", "region",
-                                   "county", "district", "latitude", "longitude")]
+uk.post.codes <- uk.post.codes[, c("post.code", "place", "district", "county",
+                                   "region", "country", "latitude", "longitude")]
 
 ## Add column to indicate if should disambiguate place name by appending region
 ## when converting place names

@@ -209,4 +209,8 @@ for (p in unique(place))
 }
 australia.post.codes$duplicate.place <- potential.dup
 
+small.to.large.ord <- c("post.code", "place", "suburb", "lga", "region", "state",
+                        "latitude", "longitude", "duplicate.place")
+australia.post.codes <- australia.post.codes[, small.to.large.ord]
+
 save(australia.post.codes, file = "data/australia.post.codes.rda", compress = TRUE)

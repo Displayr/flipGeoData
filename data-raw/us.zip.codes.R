@@ -94,8 +94,8 @@ region <- as.character(us.regions[["Region"]])
 names(region) <- as.character(us.regions[["State"]])
 us.zip.codes$region <- dplyr::recode(us.zip.codes[["state"]], !!!region)
 
-us.zip.codes <- us.zip.codes[, c("zip.code", "place", "county", "region",
-                                 "state", "latitude", "longitude")]
+us.zip.codes <- us.zip.codes[, c("zip.code", "place", "county", "state",
+                                 "region", "latitude", "longitude")]
 
 ## add column to indicate if should disambiguate place name by appending state
 ## when converting postcodes to place names

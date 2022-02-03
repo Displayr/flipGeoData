@@ -262,7 +262,7 @@ for (region in names(avail.types))
         output.types <- types[(i+1):n.types]
         cname.in <- make.names(tolower(input.type))
         txt.extra <- if (input.type == "Place")
-                         dat[in.idx, admin1.name]
+                         as.character(dat[in.idx, admin1.name])
         for (output.type in output.types)
         {
             cname.out <- make.names(tolower(output.type))
@@ -294,13 +294,13 @@ test_that("Can supply extra text to disambiguate places",
     txt <- c("Brooklyn", "Jackson", "Baltimore", "Brooklyn", "FooBar")
     txt.extra <- c("New York", "Mississippi", "Maryland", "Wisconsin", "Washington")
     out <- RecodeGeography(text = txt, text.extra = txt.extra, region = "USA",
-                           input.type = "Place")
+                           input.type = "Place", output.type = "Region")
     data(us.zip.codes, package = "flipGeoData")
     tbl <- paste0(us.zip.codes[["place"]], us.zip.codes[["state"]])
     idx <- match(paste0(txt, txt.extra), tbl)
-    expected.out <- us.zip.codes[idx, "zip.code"]
+    expected.out <- as.character(us.zip.codes[idx, "region"])
     expected.out[is.na(expected.out)] <- "Other"
-    expect_equal(out, as.character(expected.out))
+    expect_equal(out, expected.out)
 
     txt <- c("Brooklyn", "Broolkyn", "Jackson", "Madison", "Madison", "Yellowknife",
              "Vancouver")

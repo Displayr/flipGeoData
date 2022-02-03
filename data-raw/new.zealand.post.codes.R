@@ -88,7 +88,7 @@ regions.all[regions.all %in% "Manawatu-Wanganui"] <- "Manawatu-Whanganui"
 new.zealand.post.codes[["region"]] <- as.factor(regions.all)
 
 new.zealand.post.codes[["lga"]] <- as.factor(lga.part)
-new.zealand.post.codes <- new.zealand.post.codes[, c("place", "post.code", "lga",
+new.zealand.post.codes <- new.zealand.post.codes[, c("post.code", "place", "lga",
                                                      "region", "latitude", "longitude")]
 
 ## Add column to indicate if should disambiguate place name by appending region

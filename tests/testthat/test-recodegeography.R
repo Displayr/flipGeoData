@@ -307,9 +307,10 @@ test_that("Can supply extra text to disambiguate places",
     state <- c("New York", "New York", "Mississippi", "Wisconsin", "New Jersey",
                "Northwest Territory", "British Columbia")
     out <- RecodeGeography(txt, text.extra = state, input.type = "Place",
-                           output.type = "ZIP code", region = "USA", max.levenshtein.dist = 2,
+                           output.type = "Region", region = "USA", max.levenshtein.dist = 2,
                            check.neighboring.region = TRUE)
-    expected.out <- c("11201", "11201", "39201", "53701", "7940", "X1A 0A1", "V5K 0A1")
+    expected.out <- c("Northeast", "Northeast", "South", "Midwest", "Northeast",
+                      "North", "West")
     expect_equal(out, expected.out)
 })
 

@@ -121,7 +121,8 @@ detectInputType <- function(text, region, min.matches = 1)
     cols.to.check <- cols.to.check[keep.col]
     ## check factors first since want to match e.g. state/province first
     col.classes <- vapply(dat, class, "")[keep.col]
-    cols.to.check <- cols.to.check[order(col.classes, decreasing = TRUE)]
+    cols.to.check <- cols.to.check[order(col.classes, seq_along(col.classes),
+                                         decreasing = TRUE)]
 
     input.type <- NA
     for(col in cols.to.check)

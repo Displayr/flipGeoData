@@ -158,7 +158,7 @@ test_that("Approx. matching with levenshtein dist.",
     out <- RecodeGeography(txt, region = "USA", input.type = "Place",
                            output.type = "State",
                            max.levenshtein.dist = 4)
-    expect.out[4] <- as.character(us.zip.codes[idx[4], "state"])
+    expect.out <- as.character(us.zip.codes[idx, "state"])
     expect_equal(out, expect.out)
 })
 

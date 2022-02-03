@@ -1,22 +1,3 @@
-## Addresses work
-## arg for synonyms
-## warn if unmatched
-## mix CDN/US
-## mix EU/UK
-## mix AU/NZ
-## autodetect region
-## autodetect from
-## countries/states to abbreviations and vice versa
-## function to detect zip codes
-## factor inputs
-## error if 'to' arg invalid for 'from'
-## detect postcodes fun
-## numeric post codes
-## function mapping states to regions or state abbreviations
-## region = "World" checks all data sets?
-## multiple input types?
-## a single misspelled input
-## speed of NZ region autodetect (when not on reausprod); try gcinfo(TRUE)
 #' Recode geographic data to another geographic type
 #'
 #' Maps text containing geographic information (such as place names or

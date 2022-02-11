@@ -38,7 +38,7 @@ ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Count
     coords.sp <- SpatialPoints(cbind(longitude, latitude), proj4string = sp.args)
 
     ## avoid error about invalid spherical geometry for one state in Brazil
-    sf_use_s2(FALSE)
+    suppressMessages(sf_use_s2(FALSE))
     coords.sf  <- suppressMessages(st_as_sf(coords.sp))
     admin1.sf <- suppressMessages(st_as_sf(admin1.coordinates))
 

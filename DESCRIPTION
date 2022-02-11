@@ -1,13 +1,16 @@
 Package: flipGeoData
 Title: Collection of datasets of geographic data
-Version: 0.5.2
+Version: 0.6.0
 Author: Displayr <opensource@displayr.com>
 Maintainer: Displayr <opensource@displayr.com>
 Description: Contains postcodes, approximate latitude and longitude, state, and district information for cities and towns in Canada, the United States, Australia, New Zealand, the United Kingdom, and most European countries.
 Depends: R (>= 3.5.0)
 Imports: data.table,
     stringdist,
-    flipU
+    flipU,
+    sp,
+    sf (>= 0.6.4),
+    units
 Suggests: dplyr,
     FNN,
     testthat

@@ -7,12 +7,12 @@ download.file(file.path('http://www.naturalearthdata.com/http/',
 d <- tempdir()
 unzip(f, exdir = d)
 d <- tempdir()
-admin1.df <- readOGR(d, 'ne_10m_admin_1_states_provinces')
-admin1.df <- data.frame(admin1.df)
+admin1.coordinates <- readOGR(d, 'ne_10m_admin_1_states_provinces', stringsAsFactors = TRUE)
+admin1.df <- data.frame(admin1.coordinates)
 column.class <- sapply(admin1.df, class)
 column.class <- column.class[column.class == "factor"]
 for (column in names(column.class))
-    Encoding(levels(admin1.df[[column]])) <- "UTF-8"
+    Encoding(levels(admin1.coordinates[[column]])) <- "UTF-8"
 keep.cols <- c("woe_name", "latitude", "longitude", "fips", "name_en",
                "gn_name", "gns_name", "region", "postal", "code_hasc",
                "sameascity", "adm1_code", "iso_3166_2",
@@ -156,4 +156,4 @@ admin1.synonyms[["type"]] <- as.factor(admin1.synonyms[["type"]])
 admin1.synonyms[["merged"]] <- as.factor(admin1.synonyms[["merged"]])
 admin1.synonyms[["region"]] <- as.factor(admin1.synonyms[["region"]])
 
-save(admin1.synonyms, file = "R/sysdata.rda", compress = TRUE)
+save(admin1.synonyms, admin1.coordinates, file = "R/sysdata.rda", compress = TRUE)

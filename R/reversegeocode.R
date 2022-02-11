@@ -22,6 +22,7 @@
 #' @importFrom sf st_intersects st_as_sf st_length st_nearest_points
 #'     st_geometry st_join sf_use_s2
 #' @importFrom units set_units
+#' @importFrom lwgeom st_geod_length
 #' @examples
 #' ReverseGeocode(c(43.649, 37.768), c(-72.319, -75.666))
 #' ReverseGeocode(c(47.906, 59.932), c(15.239, 30.197), output.type = "Country")

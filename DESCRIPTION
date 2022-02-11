@@ -10,7 +10,8 @@ Imports: data.table,
     flipU,
     sp,
     sf (>= 0.6.4),
-    units
+    units,
+    lwgeom
 Suggests: dplyr,
     FNN,
     testthat

@@ -186,8 +186,10 @@ findMatches <- function(text, region, input.type, output.type, max.dist = 2,
     {
         text <- suppressWarnings(as.integer(text))
         found.idx <- match(text, tbl, incomparables = NA)
-    }else
+    }else if (region == "Canada" && input.type == "postal.code")
     {
+        found.idx <- matchPostalCodes(text, tbl)
+    }else{
         found.idx <- chmatch(text, as.character(tbl))
         if (anyNA(found.idx) && max.dist > 0)
         {
@@ -473,4 +475,12 @@ errorIfInvalidMergeRequested <- function(dat, input.type, output.type)
              "that is a larger geographic unit than the input type.",
              call. = FALSE)
     return(invisible())
+}
+
+#' Match Canadian postal codes with or without middle space character
+#' @noRd
+matchPostalCodes <- function(txt, tbl)
+{
+    txt <- sub("^([A-z][0-9][A-z]) ?([0-9][A-z][0-9])$", "\\U\\1 \\U\\2", txt, perl = TRUE)
+    return(chmatch(txt, tbl))
 }

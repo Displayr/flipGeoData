@@ -361,3 +361,10 @@ test_that("Error if request merge from larger geographic unit to smaller",
                                  output.type = "LGA"),
                  "no larger geographic unit available.")
 })
+
+test_that("Canadian postal codes can be missing separating space",
+{
+    txt <- c("r2j 1E9", NA, "T0A0A5")
+    out <- RecodeGeography(txt, region = "Canada", input.type = "Postal code", output.type = "Province")
+    expect_equal(out, c("Manitoba", "Other", "Alberta"))
+})

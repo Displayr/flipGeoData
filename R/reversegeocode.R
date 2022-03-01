@@ -32,11 +32,24 @@
 #' @export
 ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Country"), tol = set_units(100, "km"))
 {
+    if (length(latitude) != length(longitude))
+        stop("The supplied latitude and longitude variables must have the same length, ",
+             "they do not.")
+    if (!is.numeric(latitude) | !is.numeric(longitude))
+        stop("The supplied latitude and longitude variables must be numeric.")
+
     tol <- set_units(tol, "km")
     output.type <- match.arg(output.type)
 
+    na.idx <- (is.na(latitude) | latitude < -90 | latitude > 90 |
+               is.na(longitude) | longitude < -180 | longitude > 180)
+    if (all(na.idx))
+        stop("Each pair of coordinates contains missing values, please check your input data.")
+
+    lat.no.missing <- latitude[!na.idx]
+    long.no.missing <- longitude[!na.idx]
     sp.args <- CRS(suppressWarnings(proj4string(admin1.coordinates)))
-    coords.sp <- SpatialPoints(cbind(longitude, latitude), proj4string = sp.args)
+    coords.sp <- SpatialPoints(cbind(long.no.missing, lat.no.missing), proj4string = sp.args)
 
     ## avoid error about invalid spherical geometry for one state in Brazil
     suppressMessages(sf_use_s2(FALSE))
@@ -47,8 +60,10 @@ ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Count
     matches.sf <- st_join(coords.sf, admin1.sf, join = sfNearestWithTolerance, tol = tol)
 
     cname <- ifelse(output.type == "Country", "admin", "name")
-    out <- as.character(matches.sf[[cname]])
-    out[is.na(out)] <- "Other"
+    out.non.missing <- as.character(matches.sf[[cname]])
+    out.non.missing[is.na(out.non.missing)] <- "Other"
+    out <- rep("Other", length(latitude))
+    out[!na.idx] <- out.non.missing
     return(out)
 }
 

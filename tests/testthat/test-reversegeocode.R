@@ -30,3 +30,13 @@ test_that("Tolerance parameter for reverse geocoding works",
                           output.type = "Country")
     expect_equal(out, "United Kingdom")
 })
+
+test_that("Reverse geocoding handles missing data and invalid coordinates",
+{
+    coords <- cbind(c(14.5966, NA, -43.5118, -43.5118, 83.6, NA, 105),
+                    c(120.9445, 172.4589, 172.4589, NA, -200, NA, 102))
+    expected.out <- c("Philippines", "Other", "New Zealand", rep("Other", 4))
+    expect_warning(out <- ReverseGeocode(coords[,1], coords[,2],
+                                         output.type = "Country"), NA)
+    expect_equal(out, expected.out)
+})

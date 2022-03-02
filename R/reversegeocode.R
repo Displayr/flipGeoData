@@ -35,8 +35,13 @@ ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Count
     if (length(latitude) != length(longitude))
         stop("The supplied latitude and longitude variables must have the same length, ",
              "they do not.")
+    if (is.character(latitude))
+        latitude <- suppressWarnings(as.numeric(latitude))
+    if (is.character(longitude))
+        longitude <- suppressWarnings(as.numeric(longitude))
     if (!is.numeric(latitude) | !is.numeric(longitude))
-        stop("The supplied latitude and longitude variables must be numeric.")
+        stop("The supplied latitude and longitude variables must be either numeric ",
+             "or character.")
 
     tol <- set_units(tol, "km")
     output.type <- match.arg(output.type)

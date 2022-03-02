@@ -5,6 +5,10 @@ test_that("Reverse geocoding works for entire globe",
     expected.out <- c("Philippines", "New Zealand")
     out <- ReverseGeocode(coords[,1], coords[,2], output.type = "Country")
     expect_equal(out, expected.out)
+    coords <- as.character(coords)
+    dim(coords) <- c(2, 2)
+    out <- ReverseGeocode(coords[,1], coords[,2], output.type = "Country")
+    expect_equal(out, expected.out)
 
     set.seed(333)
     data(us.zip.codes, package = "flipGeoData")

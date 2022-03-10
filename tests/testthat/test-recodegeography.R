@@ -368,3 +368,13 @@ test_that("Canadian postal codes can be missing separating space",
     out <- RecodeGeography(txt, region = "Canada", input.type = "Postal code", output.type = "Province")
     expect_equal(out, c("Manitoba", "Other", "Alberta"))
 })
+
+test_that("Can convert inputs from both Canada+USA to country name",
+{
+    txt <- c("14850", "77840", "R3X 1M8", "R2J 1E9", "90210", "X9Z 9Q9")
+    out.expect <- c("United States", "United States", "Canada", "Canada",
+                    "United States", "Other")
+    out <- RecodeGeography(txt, input.type = "ZIP code", region = "USA",
+                           output.type = "Country", check.neighboring.region = TRUE)
+    expect_equal(out, out.expect)
+})

@@ -85,6 +85,8 @@ RecodeGeography <- function(text,
         if (is.null(input.type))
             input.type <- attr(region, "input.type")
     }
+    north.america <- region %in% c("USA", "Canada") && check.neighboring.region
+
     if (is.null(input.type))
         input.type <- detectInputType(text, region, min.matches)
 
@@ -93,11 +95,22 @@ RecodeGeography <- function(text,
     if (is.null(output.type))
         output.type <- deduceOutputType(input.type, region)
 
-
-    output.type <- convertTypeForRegionIfAvailable(output.type, dat)
-    ## check it is possible to convert input.type to output.type
+    ## Check it is possible to convert input.type to output.type
     ## input.type must be smaller geographic unit than output.type
-    errorIfInvalidMergeRequested(dat, input.type, output.type)
+    ## Check if region is 'USA' or 'Canada' and output type is 'country' (this is
+    ##   not stored in the data frames and so is handled differently)
+    north.america.country.output <- north.america && grepl("^country$",
+                                                              output.type,
+                                                              ignore.case = TRUE)
+    if (north.america.country.output)
+    {
+        output.type <- colnames(dat)[ncol(dat) - 3]
+    }else
+    {
+        output.type <- convertTypeForRegionIfAvailable(output.type, dat)
+        errorIfInvalidMergeRequested(dat, input.type, output.type)
+
+    }
 
     if (admin1Type(input.type, region))
         text <- replaceAdmin1Synonyms(text, region, input.type)
@@ -112,6 +125,11 @@ RecodeGeography <- function(text,
         found.nhbr <- findMatchesInNeighbouringRegion(text[na.idx], region, input.type,
                           output.type, max.levenshtein.dist,
                           text.extra[na.idx], error.if.ambiguous.place = TRUE, ...)
+        if (north.america.country.output)
+        {
+            found.nhbr[!is.na(found.nhbr)] <- "Canada"
+            found[-na.idx] <- "United States"
+        }
         found[na.idx] <- found.nhbr
     }
 

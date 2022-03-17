@@ -65,6 +65,6 @@ test_that("Fallback to sp::over if st_join with tolerance fails",
         longitude = 0L), name = "longitude", label = "longitude", question = "longitude")), class = "data.frame", row.names = c(NA,
                                                                                                                                 -40L))
     expect_warning(out <- ReverseGeocode(df$latitude, df$longitude), "Setting tolerance to 0km")
-    expect_equal(out[1], "Warkwickshire")
+    expect_equal(out[1], "Warwickshire")
     expect_length(out, nrow(df))
 })

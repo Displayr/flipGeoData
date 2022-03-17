@@ -24,9 +24,17 @@ keep.codes <- c("AL", "AD", "AM", "AT", "AZ", "BY", "BE", "BA", "BG",
                 "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL",
                 "PT", "RO", "RU", "SM", "RS", "SK", "SI", "ES", "SE",
                 "CH", "TR", "UA", "GB", "VC")
-
-euro.post.codes <- dat.full[dat.full[["country.code"]] %in% keep.codes, ]
+idx <- dat.full[["country.code"]] %in% keep.codes
+euro.post.codes <- dat.full[idx, ]
 euro.post.codes[["country.code"]] <- as.factor(euro.post.codes[["country.code"]])
+## map country code to country name using country.codes data
+data(country.codes, package = "flipGeoData")
+idx <- match(levels(euro.post.codes[["country.code"]]), country.codes[["country.code"]])
+country.names <- country.codes[idx, "country.name"]
+country.names <- sub(" [(].*[)]$", "", country.names)
+idx <- grep("^United Kingdom", country.names)
+country.names[idx] <- "United Kingdom"
+levels(euro.post.codes[["country.code"]]) <- country.names
 euro.post.codes[["state"]] <- as.factor(euro.post.codes[["state"]])
 euro.post.codes[["province"]] <- as.factor(euro.post.codes[["province"]])
 

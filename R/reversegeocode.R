@@ -62,7 +62,13 @@ ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Count
     admin1.sf <- suppressMessages(st_as_sf(admin1.coordinates))
 
     ## matches <- over(coords.sp, admin1.coordinates)
-    matches.sf <- st_join(coords.sf, admin1.sf, join = sfNearestWithTolerance, tol = tol)
+    matches.sf <- try(st_join(coords.sf, admin1.sf, join = sfNearestWithTolerance, tol = tol), TRUE)
+    if (inherits(matches.sf, "try-error"))
+    {
+        warning("There was an issue matching to the specified tolerance. ",
+                "Setting tolerance to 0km and retrying.")
+        matches.sf <- over(coords.sp, admin1.coordinates)
+    }
 
     cname <- ifelse(output.type == "Country", "admin", "name")
     out.non.missing <- as.character(matches.sf[[cname]])

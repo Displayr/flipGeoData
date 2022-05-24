@@ -6,7 +6,7 @@ A collection of geographic data sets containing places, postcodes,
 latitude, longitude, and administrative regions for several world
 regions. Currently supported regions are Australia, Canada, Europe,
 New Zealand, the United Kingdom, and the United
-States. Additionally. functions to parse geographic textual data and
+States. Includes functions to parse geographic textual data and
 convert it to other types; e.g. places to postcodes.
 
 To install from GitHub:

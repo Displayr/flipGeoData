@@ -26,19 +26,19 @@ jobs:
       R_KEEP_PKG_SOURCE: yes
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           lfs: true
 
-      - uses: r-lib/actions/setup-pandoc@v1
+      - uses: r-lib/actions/setup-pandoc@v2
 
-      - uses: r-lib/actions/setup-r@v1
+      - uses: r-lib/actions/setup-r@v2
         with:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
           use-public-rspm: true
 
-      - uses: r-lib/actions/setup-r-dependencies@v1
+      - uses: r-lib/actions/setup-r-dependencies@v2
         with:
           extra-packages: rcmdcheck
 
@@ -46,7 +46,7 @@ jobs:
         run: tools::resaveRdaFiles("data")
         shell: Rscript {0}
 
-      - uses: r-lib/actions/check-r-package@v1
+      - uses: r-lib/actions/check-r-package@v2
 
       - name: Show testthat output
         if: always()
@@ -61,7 +61,7 @@ jobs:
 
       - name: Upload status file as an artifact
         if: always()
-        uses: actions/upload-artifact@v1
+        uses: actions/upload-artifact@v3
         with:
           name: pass_status_${{ runner.os }}_r${{ matrix.config.r }}
           path: ${{ runner.os }}_r${{ matrix.config.r }}.txt
@@ -71,7 +71,7 @@ jobs:
     runs-on: ubuntu-latest
     if: always()
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: Create short commit sha
         uses: benjlevesque/short-sha@v1.2
         id: set_short_sha
@@ -79,26 +79,26 @@ jobs:
           length: 7
 
       - name: Download artifact pass_status_Linux_rrelease
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: pass_status_Linux_rrelease
 
       - name: Download artifact pass_status_Linux_rdevel
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: pass_status_Linux_rdevel
 
       - name: Download artifact pass_status_Windows_rrelease
-        uses: actions/download-artifact@v1
+        uses: actions/download-artifact@v3
         with:
           name: pass_status_Windows_rrelease
 
       - name: Set the statuses of each build as output parameters
         id: set_outputs
         run: |
-          echo "::set-output name=status_urel::$(<pass_status_Linux_rrelease/Linux_rrelease.txt)"
-          echo "::set-output name=status_wrel::$(<pass_status_Windows_rrelease/Windows_rrelease.txt)"
-          echo "::set-output name=status_udev::$(<pass_status_Linux_rdevel/Linux_rdevel.txt)"
+          echo "status_urel=$(<pass_status_Linux_rrelease/Linux_rrelease.txt)" >> $GITHUB_OUTPUT
+          echo "status_wrel=$(<pass_status_Windows_rrelease/Windows_rrelease.txt)" >> $GITHUB_OUTPUT
+          echo "status_udev=$(<pass_status_Linux_rdevel/Linux_rdevel.txt)" >> $GITHUB_OUTPUT
 
       - name: Set status color
         id: set_color

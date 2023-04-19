@@ -9,7 +9,7 @@ jobs:
 
     steps:
       - run: sudo apt install git-lfs
-      - run: git clone -b "$CIRCLE_BRANCH" "$CIRCLE_REPOSITORY_URL"
+      - checkout
 
       # create a unique env var for the cache. Unfortunately normal env vars
       # are not picked up by the cache, therefore this workaround is needed.

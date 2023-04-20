@@ -50,7 +50,7 @@ jobs:
           command: >-
             R -q -e 'rcmdcheck::rcmdcheck(
             args = c("--no-manual", "--ignore-vignettes", "--no-tests"),
-            build_args = c("--no-build-vignettes", "--no-manual"),
+            build_args = c("--no-build-vignettes", "--no-manual", "--resave-data"),
             error_on = "warning")'
 
       - run:

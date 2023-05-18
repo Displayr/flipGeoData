@@ -26,16 +26,16 @@ workflows:
   build-and-check-R-package:
     jobs:
       - r-packages/build-and-check-package:
-          executor: << parameters.executor >>
-          resource-class: << parameters.resource-class >>
+          executor: << pipeline.parameters.executor >>
+          resource-class: << pipeline.parameters.resource-class >>
           name: BuildAndCheckPackage
           context:
             - r_packages
           remote-deps: << pipeline.parameters.remote-deps >>
           needs-lfs: true
       - r-packages/deploy-package:
-          executor: << parameters.executor >>
-          resource-class: << parameters.resource-class >>
+          executor: << pipeline.parameters.executor >>
+          resource-class: << pipeline.parameters.resource-class >>
           requires:
             - BuildAndCheckPackage
           context:
@@ -45,8 +45,8 @@ workflows:
               only:
                 - master
       - r-packages/trigger-revdeps:
-          executor: << parameters.executor >>
-          resource-class: << parameters.resource-class >>
+          executor: << pipeline.parameters.executor >>
+          resource-class: << pipeline.parameters.resource-class >>
           requires:
             - BuildAndCheckPackage
           context:

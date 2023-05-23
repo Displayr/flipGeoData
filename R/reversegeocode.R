@@ -18,11 +18,10 @@
 #'     region for each latitude-longitude pair. \code{"Other"} is
 #'     returned for points outside where no matching country or region
 #'     is found.
-#' @importFrom sp SpatialPoints over CRS proj4string
+#' @importFrom sp SpatialPoints over CRS proj4string spTransform
 #' @importFrom sf st_intersects st_as_sf st_length st_nearest_points
 #'     st_geometry st_join sf_use_s2
 #' @importFrom units set_units
-#' @importFrom rgdal spTransform
 #' @importFrom lwgeom st_geod_length
 #' @examples
 #' ReverseGeocode(c(43.649, 37.768), c(-72.319, -75.666))

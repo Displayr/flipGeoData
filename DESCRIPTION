@@ -11,6 +11,7 @@ Imports: data.table,
     sp,
     sf (>= 0.6.4),
     units,
+    rgdal,
     lwgeom
 Suggests: dplyr,
     FNN,
@@ -19,5 +20,5 @@ Remotes: Displayr/flipU
 License: GPL-3
 URL: https://github.com/Displayr/flipGeoData
 Encoding: UTF-8
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.1
 NeedsCompilation: no

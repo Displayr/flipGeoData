@@ -22,6 +22,7 @@
 #' @importFrom sf st_intersects st_as_sf st_length st_nearest_points
 #'     st_geometry st_join sf_use_s2
 #' @importFrom units set_units
+#' @importFrom rgdal spTransform
 #' @importFrom lwgeom st_geod_length
 #' @examples
 #' ReverseGeocode(c(43.649, 37.768), c(-72.319, -75.666))
@@ -67,7 +68,21 @@ ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Count
     {
         warning("There was an issue matching to the specified tolerance. ",
                 "Setting tolerance to 0km and retrying.")
-        matches.sf <- over(coords.sp, admin1.coordinates)
+        matches.sf <- try(over(coords.sp, admin1.coordinates), TRUE)
+        ## Temporary work-around for issue with proj4string for admin1.coordinates
+        ## proj4strings are deprecated; admin1.coordinates and this function
+        ## should be updated to use WKT2 strings
+        if (inherits(matches.sf, "try-error"))
+        {
+            msg <- attr(matches.sf, "condition")$message
+            if (grep("identicalCRS", msg, fixed = TRUE))
+            {
+                admin1.coordinates <- spTransform(admin1.coordindates,
+                                                  proj4string(coords.sp))
+                matches.sf <- over(coords.sp, admin1.coordinates)
+            }else
+                stop(msg)
+        }
     }
 
     cname <- ifelse(output.type == "Country", "admin", "name")

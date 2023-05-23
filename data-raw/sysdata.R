@@ -1,7 +1,7 @@
 ## https://www.naturalearthdata.com/downloads/10m-cultural-vectors/10m-admin-1-states-provinces/
 library(rgdal)
 f <- tempfile()
-download.file(file.path('http://www.naturalearthdata.com/http/',
+download.file(file.path('https://www.naturalearthdata.com/http/',
                         'www.naturalearthdata.com/download/10m/cultural',
                         'ne_10m_admin_1_states_provinces.zip'), f)
 d <- tempdir()

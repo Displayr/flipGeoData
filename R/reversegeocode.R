@@ -76,7 +76,7 @@ ReverseGeocode <- function(latitude, longitude, output.type = c("Admin1", "Count
             msg <- attr(matches.sf, "condition")$message
             if (grep("identicalCRS", msg, fixed = TRUE))
             {
-                admin1.coordinates <- spTransform(admin1.coordindates,
+                admin1.coordinates <- spTransform(admin1.coordinates,
                                                   proj4string(coords.sp))
                 matches.sf <- over(coords.sp, admin1.coordinates)
             }else

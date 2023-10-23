@@ -378,3 +378,74 @@ test_that("Can convert inputs from both Canada+USA to country name",
                            output.type = "Country", check.neighboring.region = TRUE)
     expect_equal(out, out.expect)
 })
+
+test_that("Whitespace is handled recoding", {
+    mapping <-  c(
+        "Alabama", "South",
+        "Alaska", "West",
+        "Arizona", "West",
+        "Arkansas", "South",
+        "California", "West",
+        "Colorado", "West",
+        "Connecticut", "Northeast",
+        "Delaware", "South",
+        "Florida", "South",
+        "Georgia", "South",
+        "Hawaii", "West",
+        "Idaho", "West",
+        "Illinois", "Midwest",
+        "Indiana", "Midwest",
+        "Iowa", "Midwest",
+        "Kansas", "Midwest",
+        "Kentucky", "South",
+        "Louisiana", "South",
+        "Maine", "Northeast",
+        "Maryland", "South",
+        "Massachusetts", "Northeast",
+        "Michigan", "Midwest",
+        "Minnesota", "Midwest",
+        "Mississippi", "South",
+        "Missouri", "Midwest",
+        "Montana", "West",
+        "Nebraska", "Midwest",
+        "Nevada", "West",
+        "New Hampshire", "Northeast",
+        "New Jersey", "Northeast",
+        "New Mexico", "West",
+        "New York", "Northeast",
+        "North Carolina", "South",
+        "North Dakota", "Midwest",
+        "Ohio", "Midwest",
+        "Oklahoma", "South",
+        "Oregon", "West",
+        "Pennsylvania", "Northeast",
+        "Rhode Island", "Northeast",
+        "South Carolina", "South",
+        "South Dakota", "Midwest",
+        "Tennessee", "South",
+        "Texas", "South",
+        "Utah", "West",
+        "Vermont", "Northeast",
+        "Virginia", "South",
+        "Washington", "West",
+        "West Virginia", "South",
+        "Wisconsin", "Midwest",
+        "Wyoming", "West",
+        "Outside of the USA", "Other"
+    ) |> matrix(ncol = 2, byrow = TRUE, dimnames = list(NULL, c("state", "region")))
+    expected.output <- mapping[, "region"]
+    expect_equal(
+        RecodeGeography(mapping[, "state"], region = "USA", input.type = "State", output.type = "Region"),
+        expected.output
+    )
+    # Empty space at the beginning
+    expect_equal(
+        RecodeGeography(paste0(" ", mapping[, "state"]), region = "USA", input.type = "State", output.type = "Region"),
+        expected.output
+    )
+    # Empty space at the end
+    expect_equal(
+        RecodeGeography(paste0(mapping[, "state"], " "), region = "USA", input.type = "State", output.type = "Region"),
+        expected.output
+    )
+})

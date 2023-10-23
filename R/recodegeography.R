@@ -62,6 +62,7 @@ RecodeGeography <- function(text,
                            min.matches = 5,
                            ...)
 {
+    text <- trimws(text)
     text <- convertToTitleCaseIfNecessary(text)
     if (!is.null(text.extra))
     {
@@ -148,4 +149,3 @@ loadData <- function(region)
     data(list = data.set.name, package = "flipGeoData", envir = env)
     return(get(data.set.name, envir = env))
 }
-

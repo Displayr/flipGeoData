@@ -62,7 +62,6 @@ RecodeGeography <- function(text,
                            min.matches = 5,
                            ...)
 {
-    text <- trimws(text)
     text <- convertToTitleCaseIfNecessary(text)
     if (!is.null(text.extra))
     {
@@ -80,6 +79,7 @@ RecodeGeography <- function(text,
                  " parameter is ", dQuote(input.type), ". Only postcodes can be",
                  " numeric.")
     }
+    text <- trimws(text)
     if (is.null(region))
     {
         region <- detectRegion(text, input.type, min.matches)

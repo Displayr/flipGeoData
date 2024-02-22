@@ -33,7 +33,7 @@ workflows:
             - r_packages
           remote_deps: << pipeline.parameters.remote_deps >>
           needs_lfs: true
-      - r-packages/deploy-package:
+      - r-packages/deploy_package:
           executor: << pipeline.parameters.executor >>
           resource_class: << pipeline.parameters.resource_class >>
           requires:

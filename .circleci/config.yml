@@ -16,7 +16,7 @@ parameters:
     default: ""
   executor:
     type: enum
-    enum: [nightly, rocker, machine]
+    enum: [nightly, rocker, machine, rocker_geo]
     default: nightly
   resource-class:
     type: string
@@ -25,17 +25,17 @@ parameters:
 workflows:
   build-and-check-R-package:
     jobs:
-      - r-packages/build-and-check-package:
+      - r-packages/build_and_check_package:
           executor: << pipeline.parameters.executor >>
-          resource-class: << pipeline.parameters.resource-class >>
+          resource_class: << pipeline.parameters.resource_class >>
           name: BuildAndCheckPackage
           context:
             - r_packages
-          remote-deps: << pipeline.parameters.remote-deps >>
-          needs-lfs: true
-      - r-packages/deploy-package:
+          remote_deps: << pipeline.parameters.remote_deps >>
+          needs_lfs: true
+      - r-packages/deploy_package:
           executor: << pipeline.parameters.executor >>
-          resource-class: << pipeline.parameters.resource-class >>
+          resource_class: << pipeline.parameters.resource_class >>
           requires:
             - BuildAndCheckPackage
           context:

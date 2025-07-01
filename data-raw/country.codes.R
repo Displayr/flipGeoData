@@ -28,7 +28,7 @@ loadPkgData <- function(fname)
              " to create this data set.")
 
     }
-    readRDS(data.file, .GlobalEnv)
+    readRDS(data.file)
     return(invisible())
 }
 

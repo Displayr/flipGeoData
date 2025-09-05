@@ -1,3 +1,0 @@
-*.rdata filter=lfs diff=lfs merge=lfs -text
-sysdata.rda -filter -diff -merge -text
-*.rda filter=lfs diff=lfs merge=lfs -text

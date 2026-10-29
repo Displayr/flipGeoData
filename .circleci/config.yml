@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  r-packages: displayr/r-packages@dev:alpha
+  r-packages: displayr/r-packages@dev:dpi-5055
 parameters:
   trigger-message:
     type: string
@@ -27,15 +27,15 @@ workflows:
     jobs:
       - r-packages/build_and_check_package:
           executor: << pipeline.parameters.executor >>
-          resource_class: << pipeline.parameters.resource_class >>
+          resource_class: << pipeline.parameters.resource-class >>
           name: BuildAndCheckPackage
           context:
             - r_packages
-          remote_deps: << pipeline.parameters.remote_deps >>
+          remote_deps: << pipeline.parameters.remote-deps >>
           needs_lfs: true
       - r-packages/deploy_package:
           executor: << pipeline.parameters.executor >>
-          resource_class: << pipeline.parameters.resource_class >>
+          resource_class: << pipeline.parameters.resource-class >>
           requires:
             - BuildAndCheckPackage
           context:
